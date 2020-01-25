@@ -1,0 +1,24 @@
+@import url(https://fonts.googleapis.com/css?family=Press+Start+2P&display=swap);
+
+.racer-play-container {
+	width: 100%;
+	height: 100vh;
+	font-family: 'Press Start 2P', cursive;
+	color: white;
+	background-color: black;
+	background-size: 100% auto;
+	overflow-y: hidden;
+	overflow-x: hidden;
+	margin: 0;
+	padding: 0;
+
+	.map {
+		font-size: 0.1em;
+	}
+}
+
+@media (max-width: 600px) {
+	.racer-play-container {
+		height: 90vh;
+	}
+}

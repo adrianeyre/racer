@@ -1,0 +1,89 @@
+$info-board-background: #2774EC;
+$info-board-text-colour: white;
+
+.info-board {
+	position: absolute;
+	color: $info-board-text-colour;
+	background-color: $info-board-background;
+	opacity: 0.7;
+	z-index: 10000;
+	margin: 8% 10%;
+
+	table {
+		width: 80%;
+		margin: 0 4em;
+		margin-bottom: 1em;
+
+		td {
+			text-align: center;
+			padding: 0.6em;
+		}
+
+		.title {
+			color: $info-board-background;
+			background-color: $info-board-text-colour;
+		}
+	}
+
+	.game-over-area {
+		margin: 2em;
+		text-align: center;
+
+		.game-over-title {
+			font-size: 1.6em;
+		}
+
+		.game-over-text {
+			margin-top: 2em;
+		}
+	}
+
+	.info-board-header {
+		text-align: center;
+		font-size: 1.8em;
+		margin-top: 1em;
+
+		.header-text {
+			margin: 0 1em;
+		}
+
+		img {
+			height: 1.2em;
+			width: 1.2em;
+		}
+	}
+
+	.info-board-instructions {
+		margin: 0.5em;
+		font-size: 0.8em;
+
+		li {
+			margin-bottom: 10px;
+		}
+	}
+
+	.button-area {
+		margin-bottom: 2em;
+		text-align: center;
+	}
+}
+
+@media (max-width: 600px) {
+	.info-board {
+		font-size: 0.8em;
+
+		.button-area {
+			left: 20%;
+		}
+	}
+}
+
+@media (max-width: 500px) {
+	.info-board {
+		font-size: 0.5em;
+
+		.button-area {
+			left: 20%;
+		}
+	}
+}

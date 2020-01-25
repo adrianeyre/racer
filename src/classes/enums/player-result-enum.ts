@@ -1,0 +1,24 @@
+enum PlayerResultEnum {
+	SAFE = 0,
+	STAR = 1,
+	BOLDER_MOVED = 2,
+	INVENTORY_FULL = 3,
+	INVENTORY_ADDED = 4,
+	INVENTORY_USED = 5,
+	NOT_IN_INVENTORY = 6,
+	LOOSE_LIFE = 7,
+	PLAYER_MOVED = 8,
+	DEAD = 8,
+	EDIT_SPRITE = 9,
+	SELECT_SPRITE = 10,
+	GRASS = 11,
+	ENTER = 13,
+	SPACE_BAR = 32,
+	ARROW_UP = 38,
+	ARROW_DOWN = 40,
+	ARROW_RIGHT = 39,
+	ARROW_LEFT = 37,
+	EDITING = 69,
+}
+
+export default PlayerResultEnum;
