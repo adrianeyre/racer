@@ -46,4 +46,15 @@ export default class Board implements IBoard {
 	}
 
 	public hasHitWall = (x: number, y: number): boolean => this.board[y-1][x-1] === 1;
+
+	public findBlock = (block: number): any => {
+		for (let y = 1; y < this.board.length; y++) {
+			const x = this.board[y].indexOf(block);
+			if (x > -1) {
+				return { xPos: x + 1, yPos: y + 1};
+			}
+		}
+
+		return { xPos: null, yPos: null };
+	}
 }

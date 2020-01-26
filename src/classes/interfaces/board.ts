@@ -11,4 +11,5 @@ export default interface IBoard {
 	playerStartData: IPlayerStartData[];
 	readLevel(level: number): Promise<void>;
 	hasHitWall(x: number, y: number): boolean;
+	findBlock(block: number): any;
 }

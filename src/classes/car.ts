@@ -53,10 +53,12 @@ export default class Car implements ICar {
 	public direction: DirectEnum;
 	public isAlive: boolean;
 	public crashing: number;
+	public maxSpeed: number
+	public startIteration: number;
+	public iteration: number;
 
 	readonly CAR_WIDTH: number = 1;
 	readonly CAR_HEIGHT: number = 1;
-	readonly MAX_SPEED: number = 10;
 	readonly SPEED_INCREMENT: number = 1;
 	readonly Z_INDEX: number = 5000;
 	readonly playerImages = {
@@ -96,6 +98,9 @@ export default class Car implements ICar {
 		this.type = config.type;
 		this.isAlive = true;
 		this.crashing = -1;
+		this.maxSpeed = config.maxSpeed;
+		this.startIteration = config.startIteration;
+		this.iteration = this.startIteration;
 
 		this.updateImage();
 	}
@@ -121,7 +126,7 @@ export default class Car implements ICar {
 
 	public speedUp = (): void => {
 		this.speed += this.SPEED_INCREMENT;
-		if (this.speed > this.MAX_SPEED) this.speed = this.MAX_SPEED;
+		if (this.speed > this.maxSpeed) this.speed = this.maxSpeed;
 	}
 
 	public slowDown = (): void => {
@@ -147,7 +152,12 @@ export default class Car implements ICar {
 		this.direction = DirectEnum.RIGHT;
 		this.crashing = -1;
 		this.speed = 0;
+		this.iteration = 11;
 		this.updateImage();
+	}
+
+	public directCar = (board: IBoard): void => {
+		new Error('method not available on parent class');
 	}
 
 	private updateImage = (): void => {

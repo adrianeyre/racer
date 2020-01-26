@@ -22,10 +22,13 @@ export default interface ICar {
 	type: SpriteTypeEnum;
 	isAlive: boolean;
 	crashing: number;
+	startIteration: number;
+	iteration: number;
 	move(board: IBoard, car: ICar, cars: ICar[]): PlayerResultEnum;
 	resetStart(x: number, y: number): void;
 	speedUp(): void;
 	slowDown(): void;
 	turnRight(): void;
 	turnLeft(): void;
+	directCar(board: IBoard): void;
 }

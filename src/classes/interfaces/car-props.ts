@@ -5,5 +5,7 @@ export default interface ICarProps {
 	startX: number;
 	startY: number;
 	type: SpriteTypeEnum;
+	maxSpeed: number;
+	startIteration: number;
 	zIndex?: number;
 }

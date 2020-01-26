@@ -5,7 +5,7 @@ import IBoard from './interfaces/board';
 import PlayerResultEnum from './enums/player-result-enum';
 import SpriteTypeEnum from './enums/sprite-type-enum';
 import IRacerProps from '../components/racer/interfaces/racer-props';
-import Car from './car';
+import Computer from './computer';
 import ICar from './interfaces/car';
 
 export default class Game implements IGame {
@@ -54,9 +54,29 @@ export default class Game implements IGame {
 		this.increment ++;
 		if (this.increment > this.MAX_INCREMENT) this.increment = 0;
 
-		this.cars.forEach((car: ICar) => {
-			if (car.speed > 0 && this.increment % (11 - car.speed) === 0) this.handleInput(car.move(this.board, car, this.cars), car);
-		})
+		this.cars.forEach((car: ICar) => this.checkCar(car));
+	}
+
+	private checkCar = (car: ICar): void => {
+		if (this.increment % (11 - car.speed) !== 0) return;
+		this.speedUp(car);
+		this.directCar(car);
+		this.moveCar(car);
+	}
+
+	private speedUp = (car: ICar): void => {
+		if (car.type !== SpriteTypeEnum.Computer) return;
+		car.speedUp();
+	}
+
+	private directCar = (car: ICar): void => {
+		if (car.type !== SpriteTypeEnum.Computer) return;
+		car.directCar(this.board);
+	}
+
+	private moveCar = (car: ICar): void => {
+		if (car.speed === 0) return;
+		this.handleInput(car.move(this.board, car, this.cars), car);
 	}
 
 	private resetCarStart = (car?: ICar): void => {
@@ -75,25 +95,33 @@ export default class Game implements IGame {
 				startX: this.board.playerStartData[0].x,
 				startY: this.board.playerStartData[0].y,
 				type: SpriteTypeEnum.Player01,
+				maxSpeed: 10,
 				zIndex: 7000,
+				startIteration: 0,
 			}),
-			new Car({
+			new Computer({
 				key: 'computer01',
 				startX: this.board.playerStartData[1].x,
 				startY: this.board.playerStartData[1].y,
 				type: SpriteTypeEnum.Computer,
+				maxSpeed: 8,
+				startIteration: 11,
 			}),
-			new Car({
+			new Computer({
 				key: 'computer02',
 				startX: this.board.playerStartData[2].x,
 				startY: this.board.playerStartData[2].y,
 				type: SpriteTypeEnum.Computer,
+				maxSpeed: 8,
+				startIteration: 31,
 			}),
-			new Car({
+			new Computer({
 				key: 'computer03',
 				startX: this.board.playerStartData[3].x,
 				startY: this.board.playerStartData[3].y,
 				type: SpriteTypeEnum.Computer,
+				maxSpeed: 7,
+				startIteration: 61,
 			}),
 		];
 
