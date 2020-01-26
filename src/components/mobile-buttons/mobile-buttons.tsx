@@ -9,18 +9,14 @@ export default class MobileButtons extends React.Component<IMobileButtonsProps, 
 	public render() {
 		return <div className="mobile-buttons">
 			<div className="button-row">
-				<button type="button" onClick={ this.props.handleMobileButton.bind(this, PlayerResultEnum.ARROW_UP) }>UP</button>
+				<button type="button" onClick={ this.props.handleMobileButton.bind(this, PlayerResultEnum.ARROW_UP) }>FASTER</button>
 			</div>
 			<div className="button-row">
 				<button className="left-button" type="button" onClick={ this.props.handleMobileButton.bind(this, PlayerResultEnum.ARROW_LEFT) }>LEFT</button>
 				<button type="button" onClick={ this.props.handleMobileButton.bind(this, PlayerResultEnum.ARROW_RIGHT) }>RIGHT</button>
 			</div>
 			<div className="button-row">
-				<button type="button" onClick={ this.props.handleMobileButton.bind(this, PlayerResultEnum.ARROW_DOWN) }>DOWN</button>
-			</div>
-			<div className="button-row">
-				<button className="left-button" type="button" onClick={ this.props.handleMobileButton.bind(this, PlayerResultEnum.SPACE_BAR) }>SWAP</button>
-				<button type="button" onClick={ this.props.handleMobileButton.bind(this, PlayerResultEnum.ENTER) }>DROP</button>
+				<button type="button" onClick={ this.props.handleMobileButton.bind(this, PlayerResultEnum.ARROW_DOWN) }>SLOWER</button>
 			</div>
 		</div>
 	}

@@ -1,15 +1,14 @@
-import ISprite from './sprite';
-import IPlayer from './player';
 import IFileService from '../../services/interfaces/file-service';
+import IPlayerStartData from '../../services/interfaces/player-start-data';
+import ISprite from '../interfaces/sprite';
 
 export default interface IBoard {
 	board: number[][];
-	player: IPlayer;
 	sprites: ISprite[];
-	startX: number;
-	startY: number;
 	boardWidth: number;
 	boardHeight: number;
-	boardImage: string;
 	fileService: IFileService;
+	playerStartData: IPlayerStartData[];
+	readLevel(level: number): Promise<void>;
+	hasHitWall(x: number, y: number): boolean;
 }

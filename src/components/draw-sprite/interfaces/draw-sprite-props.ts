@@ -1,10 +1,10 @@
-import IPlayer from '../../../classes/interfaces/player';
 import ISprite from '../../../classes/interfaces/sprite';
+import ICar from '../../../classes/interfaces/car';
 
 export default interface IDrawSpriteProps {
-	sprite: IPlayer | ISprite;
+	sprite: ISprite | ICar;
 	height: number;
 	width: number;
 	containerWidth: number;
-	handleClick(sprite: IPlayer | ISprite): void;
+	handleClick(sprite:  ISprite | ICar): void;
 }

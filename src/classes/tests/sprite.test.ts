@@ -1,39 +1,33 @@
 import SpriteTypeEnum from '../enums/sprite-type-enum';
-
 import Sprite from '../sprite';
 import ISpriteProps from '../interfaces/sprite-props';
-import ImageEnum from 'classes/enums/image-enum';
 
 describe('Sprite', () => {
 	let defaultConfig: ISpriteProps
 
 	beforeEach(() => {
 		defaultConfig = {
-			key: 'sprite',
-			visable: true,
+			key: 'level01',
 			x: 10,
 			y: 10,
-			blockX: 1,
-			blockY: 1,
-			width: 8,
-			height: 8,
-			image: ImageEnum.SPRITE00,
-			type: SpriteTypeEnum.BLANK,
-			outline: false,
+			width: 1,
+			height: 1,
+			type: SpriteTypeEnum.Level01Board,
+			zIndex: 1000,
 		}
 	})
 
 	it('Should create Sprite class', () => {
 		const sprite = new Sprite(defaultConfig);
 
-		expect(sprite.key).toEqual('sprite');
+		expect(sprite.key).toEqual('level01');
 		expect(sprite.visable).toEqual(true);
 		expect(sprite.x).toEqual(10);
 		expect(sprite.y).toEqual(10);
-		expect(sprite.width).toEqual(8);
-		expect(sprite.height).toEqual(8);
-		expect(sprite.zIndex).toEqual(5000);
-		expect(sprite.image).toEqual('sprite00.png');
-		expect(sprite.type).toEqual(SpriteTypeEnum.BLANK);
+		expect(sprite.width).toEqual(1);
+		expect(sprite.height).toEqual(1);
+		expect(sprite.zIndex).toEqual(1000);
+		expect(sprite.image).toEqual('level-01.png');
+		expect(sprite.type).toEqual(SpriteTypeEnum.Level01Board);
 	});
 });

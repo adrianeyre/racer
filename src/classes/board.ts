@@ -1,55 +1,49 @@
 import IBoard from './interfaces/board';
 import ISprite from './interfaces/sprite';
-import IPlayer from './interfaces/player';
-import Player from './player';
-import IBoardProps from './interfaces/board-props';
+import Sprite from './sprite';
 import IFileService from '../services/interfaces/file-service';
 import FileService from '../services/file-service';
-
-import level01Board from '../images/level-01.png';
-import level02Board from '../images/level-02.png';
-import level03Board from '../images/level-03.png';
-import level04Board from '../images/level-04.png';
-import level05Board from '../images/level-05.png';
-import level06Board from '../images/level-06.png';
-import level07Board from '../images/level-07.png';
-import level08Board from '../images/level-08.png';
-import level09Board from '../images/level-09.png';
-import level10Board from '../images/level-10.png';
+import IPlayerStartData from '../services/interfaces/player-start-data';
+import SpriteTypeEnum from './enums/sprite-type-enum';
 
 export default class Board implements IBoard {
 	public board: number[][];
-	public player: IPlayer;
 	public sprites: ISprite[];
-	public currentLevel: number;
-	public startX: number;
-	public startY: number;
 	public fileService: IFileService;
 	public boardWidth: number;
 	public boardHeight: number;
-	public boardImage: string;
+	public playerStartData: IPlayerStartData[];
 
-	readonly SPRITE_BLOCKS_WIDTH: number = 12;
-	readonly SPRITE_BLOCKS_HEIGHT: number = 12;
-	readonly SPRITE_WIDTH: number = 3;
-	readonly SPRITE_HEIGHT: number = 3;
-	readonly boards = [
-		level01Board, level02Board, level03Board, level04Board, level05Board,
-		level06Board, level07Board, level08Board, level09Board, level10Board
-	]
+	readonly SPRITE_BLOCKS_WIDTH: number = 50;
+	readonly SPRITE_BLOCKS_HEIGHT: number = 30;
 
-	constructor(config: IBoardProps) {
-		this.player = new Player({});
+	constructor() {
 		this.fileService = new FileService();
-		this.currentLevel = config.currentLevel
 		this.board = [[]]
-		this.startX = 0;
-		this.startY = 0;
+		this.boardWidth = this.SPRITE_BLOCKS_WIDTH;
+		this.boardHeight = this.SPRITE_BLOCKS_HEIGHT;
+		this.playerStartData = [];
 		this.sprites = [];
-		this.boardWidth = 0;
-		this.boardHeight = 0;
-		this.boardImage = this.getBoardImage();
 	}
 
-	private getBoardImage = (): string => this.boards[this.currentLevel - 1];
+	public readLevel = async (level: number): Promise<void> => {
+		this.board = await this.fileService.readLevel(level);
+
+		const playerStartData = await this.fileService.readPlayerData(level)
+		this.playerStartData = playerStartData.map((value: any) => ({ x: value[0], y: value[1]}));
+
+		this.sprites = [
+			new Sprite({
+				key: 'board',
+				x: 1,
+				y: 1,
+				width: this.boardWidth,
+				height: this.boardHeight,
+				type: SpriteTypeEnum[`Level${ level.toString().length === 1 ? '0' : '' }${ level }Board`],
+				zIndex: 100,
+			})
+		]
+	}
+
+	public hasHitWall = (x: number, y: number): boolean => this.board[y-1][x-1] === 1;
 }

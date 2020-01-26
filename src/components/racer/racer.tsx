@@ -1,6 +1,7 @@
 import React from 'react';
 import Game from '../../classes/game';
 import ISprite from '../../classes/interfaces/sprite';
+import ICar from '../../classes/interfaces/car';
 import PlayerResultEnum from '../../classes/enums/player-result-enum';
 import IRacerProps from './interfaces/racer-props';
 import IRacerState from './interfaces/racer-state';
@@ -11,8 +12,6 @@ import MobileButtons from '../mobile-buttons/mobile-buttons';
 import './styles/racer.scss';
 
 export default class Racer extends React.Component<IRacerProps, IRacerState> {
-	private SPRITE_BLOCKS_WIDTH: number = 36;
-	private SPRITE_BLOCKS_HEIGHT: number = 36;
 	private container: any;
 
 	constructor(props: IRacerProps) {
@@ -47,13 +46,13 @@ export default class Racer extends React.Component<IRacerProps, IRacerState> {
 	public render() {
 		return <div className="racer-play-container" ref={(d) => { this.container = d }} style={ this.styleContainer() }>
 			{ !this.state.game.isGameInPlay && <div style={ this.styleInfoBoard() }>
-				<InfoBoard gameOver={ this.state.game.board.player.lives < 1 } startGame={ this.startGame } score={ this.state.game.board.player.score } containerHeight={ this.state.containerHeight } />
+				<InfoBoard gameOver={ false } startGame={ this.startGame } score={ 999 } containerHeight={ this.state.containerHeight } />
 			</div> }
 
 			{ this.state.game.isGameInPlay && <div className="play-area">
 				{ this.state.game.board.sprites?.map((sprite: ISprite) => <DrawSprite key={ sprite.key } sprite={ sprite } handleClick={ this.handleSpriteClick } height={ this.state.spriteHeight } width={ this.state.spriteWidth } containerWidth={ this.state.containerWidth } />) }
 
-				<DrawSprite sprite={ this.state.game.board.player } handleClick={ this.handleClickPlayer }height={ this.state.spriteHeight } width={ this.state.spriteWidth } containerWidth={ this.state.containerWidth } />
+				{ this.state.game.cars?.map((sprite: ICar) => <DrawSprite key={ sprite.key } sprite={ sprite } handleClick={ this.handleCarClick } height={ this.state.spriteHeight } width={ this.state.spriteWidth } containerWidth={ this.state.containerWidth } />) }
 			</div> }
 
 			{ this.state.game.isGameInPlay && this.state.containerWidth < 600 && <div style={ this.styleGameButtons() }><MobileButtons handleMobileButton={ this.handleMobileButton }/></div> }
@@ -63,8 +62,6 @@ export default class Racer extends React.Component<IRacerProps, IRacerState> {
 	private styleContainer = () => ({
 		maxWidth: `${ this.state.containerHeight }px`,
 		marginLeft: `${ this.state.containerMargin }px`,
-		backgroundImage: `url("${ this.state.game.board.boardImage }")`,
-		backgroundRepeat: 'no-repeat, repeat',
 	})
 
 	private styleInfoBoard = () => ({
@@ -77,7 +74,7 @@ export default class Racer extends React.Component<IRacerProps, IRacerState> {
 		position: 'absolute' as 'absolute',
 		width: `100%`,
 		maxWidth: `${ this.state.containerHeight }px`,
-		top: `${ this.state.containerWidth / 100 * 105 }px`,
+		top: `${ this.state.containerWidth / 100 * 72 }px`,
 	})
 
 	private startGame = async (): Promise<void> => {
@@ -104,10 +101,10 @@ export default class Racer extends React.Component<IRacerProps, IRacerState> {
 	private updatePlayerArea = (): void => {
 		const containerHeight = this.container && this.container.getBoundingClientRect().height;
 		let containerWidth = this.container && this.container.getBoundingClientRect().width;
-		const containerMargin = (window.innerWidth - containerHeight) / 2;
 		if (containerWidth > containerHeight) containerWidth = containerHeight;
-		const spriteWidth = containerWidth / this.SPRITE_BLOCKS_WIDTH;
-		const spriteHeight = ((containerWidth / 100) * 100 ) / this.SPRITE_BLOCKS_HEIGHT;
+		const containerMargin = (window.innerWidth - containerWidth) / 2;
+		const spriteWidth = containerWidth / this.state.game.board.boardWidth;
+		const spriteHeight = ((containerWidth / 100) * 70 ) / this.state.game.board.boardHeight;
 		this.setState(() => ({ spriteWidth, spriteHeight, containerWidth, containerHeight, containerMargin }))
 	}
 
@@ -141,10 +138,6 @@ export default class Racer extends React.Component<IRacerProps, IRacerState> {
 	}
 
 	private handleMobileButton = async (direction: PlayerResultEnum): Promise<void> => await this.handleInput(direction);
-
-	private handleSpriteClick = async (sprite: ISprite) => {
-		this.state.game.handleInput(PlayerResultEnum.EDIT_SPRITE, sprite);
-	}
-
-	private handleClickPlayer = (sprite: ISprite) => {}
+	private handleSpriteClick = async (sprite: ISprite) => {}
+	private handleCarClick = (sprite: ICar) => {}
 }
