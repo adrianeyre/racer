@@ -48,6 +48,7 @@ export default class Board implements IBoard {
 	public hasHitWall = (x: number, y: number): boolean => this.board[y-1][x-1] === 1;
 	public isHalfWay = (x: number, y: number): boolean => this.board[y-1][x-1] === 7;
 	public isLapFinished = (x: number, y: number): boolean => this.board[y-1][x-1] === 5;
+	public isBridge = (x: number, y: number): boolean => this.board[y-1][x-1] === 2;
 
 	public findBlock = (block: number): any => {
 		for (let y = 1; y < this.board.length; y++) {

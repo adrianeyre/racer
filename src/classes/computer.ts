@@ -26,4 +26,12 @@ export default class Computer extends Car implements IComputer {
 
 		return DirectionEnum.STOOD;
 	}
+
+	public alterDirection = (): DirectionEnum => {
+		let direction = this.direction;
+		direction ++;
+		if (direction > DirectionEnum.UP_LEFT) direction = DirectionEnum.UP;
+
+		return this.direction = direction
+	}
 }

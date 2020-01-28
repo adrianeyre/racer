@@ -13,5 +13,6 @@ export default interface IBoard {
 	hasHitWall(x: number, y: number): boolean;
 	findBlock(block: number): any;
 	isHalfWay(x: number, y: number): boolean;
+	isBridge(x: number, y: number): boolean;
 	isLapFinished(x: number, y: number): boolean;
 }

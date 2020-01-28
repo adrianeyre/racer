@@ -2,7 +2,7 @@ import ICarProps from './interfaces/car-props';
 import ICar from './interfaces/car';
 import IBoard from './interfaces/board';
 import SpriteTypeEnum from './enums/sprite-type-enum';
-import DirectEnum from './enums/direction-enum';
+import DirectionEnum from './enums/direction-enum';
 import PlayerResultEnum from './enums/player-result-enum';
 
 import player01Image01 from '../images/player-01-01.png';
@@ -51,7 +51,7 @@ export default class Car implements ICar {
 	public speed: number;
 	public image: string;
 	public type: SpriteTypeEnum;
-	public direction: DirectEnum;
+	public direction: DirectionEnum;
 	public isAlive: boolean;
 	public crashIteration: number;
 	public crashed: boolean;
@@ -99,7 +99,7 @@ export default class Car implements ICar {
 		this.width = this.CAR_WIDTH;
 		this.height = this.CAR_HEIGHT;
 		this.zIndex = config.zIndex || this.Z_INDEX;
-		this.direction = DirectEnum.RIGHT;
+		this.direction = DirectionEnum.RIGHT;
 		this.image = '';
 		this.type = config.type;
 		this.isAlive = true;
@@ -115,21 +115,35 @@ export default class Car implements ICar {
 
 	public move = (board: IBoard, car: ICar, cars: ICar[]): PlayerResultEnum => {
 		let result = PlayerResultEnum.SAFE;
-		if (!this.crashed) this.updateCarPosition();
+		this.visable = true;
+		const { x, y } = this.updateCarPosition();
+		const hasHitWall = board.hasHitWall(x, y);
+		const hasHitCar = this.hitCar(x, y, car, cars)
 
 		if (
-			this.x < 0 ||
-			this.x > board.boardWidth ||
-			this.y < 0 ||
-			this.y > board.boardHeight ||
-			board.hasHitWall(this.x, this.y) ||
-			this.hitCar(car, cars)
+			x < 0 ||
+			x > board.boardWidth ||
+			y < 0 ||
+			y > board.boardHeight ||
+			hasHitWall ||
+			hasHitCar
 		) {
+			if (hasHitCar && car.type === SpriteTypeEnum.Computer) {
+				this.alterDirection();
+				return this.move(board, car, cars);
+			}
+
 			this.crashed = true;
 		};
 
-		if (this.crashed) result = this.crashCar();
-
+		if (this.crashed) {
+			result = this.crashCar();
+		} else {
+			this.x = x;
+			this.y = y;
+		}
+		
+		if (board.isBridge(this.x, this.y)) this.visable = false;
 		this.updateImage();
 		this.checkHalfWayPoint(board);
 		this.checkFinishPoint(board)
@@ -150,31 +164,32 @@ export default class Car implements ICar {
 	public turnRight = (): void => {
 		if (this.speed === 0) return;
 		this.direction ++;
-		if (this.direction > DirectEnum.UP_LEFT) this.direction = DirectEnum.UP;
+		if (this.direction > DirectionEnum.UP_LEFT) this.direction = DirectionEnum.UP;
 	}
 
 	public turnLeft = (): void => {
 		if (this.speed === 0) return;
 		this.direction --;
-		if (this.direction < DirectEnum.UP) this.direction = DirectEnum.UP_LEFT;
+		if (this.direction < DirectionEnum.UP) this.direction = DirectionEnum.UP_LEFT;
 	}
 
 	public updateTimer = (time: number): number => this.time = time;
 
 	public resetStart = (x: number, y: number): void => {
-		this.x = x;
-		this.y = y;
-		this.direction = DirectEnum.RIGHT;
+		this.direction = DirectionEnum.RIGHT;
 		this.crashIteration = -1;
 		this.crashed = false;
 		this.speed = 0;
-		this.iteration = 11;
-		this.halfWay = false;
 		this.updateImage();
 	}
 
 	public directCar = (board: IBoard): void => {
 		new Error('method not available on parent class');
+	}
+
+	public alterDirection = (): DirectionEnum => {
+		new Error('method not available on parent class');
+		return DirectionEnum.STOOD;
 	}
 
 	private updateImage = (): void => {
@@ -194,16 +209,13 @@ export default class Car implements ICar {
 		}
 	}
 
-	private hitCar = (car: ICar, cars: ICar[]): boolean => {
+	private hitCar = (x: number, y: number, car: ICar, cars: ICar[]): boolean => {
 		let result = false;
 		const otherCars = cars.filter((otherCar: ICar) => otherCar.key !== car.key);
 		if (!otherCars) return result;
 
 		otherCars.forEach((otherCar: ICar) => {
-			if (otherCar.x === car.x && otherCar.y === car.y && !otherCar.crashed) {
-				result = true;
-				otherCar.crashed = true;
-			}
+			if (otherCar.x === x && otherCar.y === y) result = true;
 		});
 
 		return result;
@@ -213,7 +225,7 @@ export default class Car implements ICar {
 		this.crashIteration ++;
 		this.crashed = true;
 		this.speed = 1;
-		this.direction = DirectEnum.STOOD;
+		this.direction = DirectionEnum.STOOD;
 		
 		if (this.crashIteration > this.playerImages.crash.length - 1) {
 			this.crashIteration = -1;
@@ -224,24 +236,29 @@ export default class Car implements ICar {
 		return PlayerResultEnum.CRASHING;
 	}
 
-	private updateCarPosition = (): void => {
+	private updateCarPosition = (): any => {
+		let x = this.x,
+			y = this.y;
+
 		switch (this.direction) {
-			case DirectEnum.UP:
-				this.y -= this.CAR_HEIGHT; break;
-			case DirectEnum.UP_RIGHT:
-				this.x += this.CAR_WIDTH; this.y -= this.CAR_HEIGHT; break;
-			case DirectEnum.RIGHT:
-				this.x += this.CAR_WIDTH; break;
-			case DirectEnum.DOWN_RIGHT:
-				this.x += this.CAR_WIDTH; this.y += this.CAR_HEIGHT; break;
-			case DirectEnum.DOWN:
-				this.y += this.CAR_HEIGHT; break;
-			case DirectEnum.DOWN_LEFT:
-				this.x -= this.CAR_WIDTH; this.y += this.CAR_HEIGHT; break;
-			case DirectEnum.LEFT:
-				this.x -= this.CAR_WIDTH; break;
-			case DirectEnum.UP_LEFT:
-				this.x -= this.CAR_WIDTH; this.y -= this.CAR_HEIGHT; break;
+			case DirectionEnum.UP:
+				y -= this.CAR_HEIGHT; break;
+			case DirectionEnum.UP_RIGHT:
+				x += this.CAR_WIDTH; y -= this.CAR_HEIGHT; break;
+			case DirectionEnum.RIGHT:
+				x += this.CAR_WIDTH; break;
+			case DirectionEnum.DOWN_RIGHT:
+				x += this.CAR_WIDTH; y += this.CAR_HEIGHT; break;
+			case DirectionEnum.DOWN:
+				y += this.CAR_HEIGHT; break;
+			case DirectionEnum.DOWN_LEFT:
+				x -= this.CAR_WIDTH; y += this.CAR_HEIGHT; break;
+			case DirectionEnum.LEFT:
+				x -= this.CAR_WIDTH; break;
+			case DirectionEnum.UP_LEFT:
+				x -= this.CAR_WIDTH; y -= this.CAR_HEIGHT; break;
 		}
+
+		return { x, y };
 	}
 }

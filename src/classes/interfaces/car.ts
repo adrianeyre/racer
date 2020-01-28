@@ -36,4 +36,5 @@ export default interface ICar {
 	turnRight(): void;
 	turnLeft(): void;
 	directCar(board: IBoard): void;
+	alterDirection(): DirectionEnum;
 }
