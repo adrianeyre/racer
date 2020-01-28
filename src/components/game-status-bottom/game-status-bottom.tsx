@@ -9,7 +9,7 @@ export default class GameStatusBottom extends React.Component<IGameStatusBottomP
 
 	public render() {
 		return <div className="game-status-bottom">
-			{ this.props.cars.map((car: ICar) => <div className="player-status">
+			{ this.props.cars.map((car: ICar, carIndex: number) => <div key={ `car-status-${ carIndex }` } className="player-status">
 				<div className="car-name">{ car.name }</div>
 				<div className="car-details">Laps { car.laps } / { this.props.totalLaps }</div>
 				<div className="car-details">Speed { car.speed * 10 } mph</div>

@@ -10,19 +10,28 @@ $info-board-text-colour: white;
 	margin: 8% 10%;
 
 	table {
-		width: 80%;
-		margin: 0 4em;
+		width: 100%;
 		margin-bottom: 1em;
 
 		td {
 			text-align: center;
 			padding: 0.6em;
+			width: 25%;
 		}
 
 		.title {
 			color: $info-board-background;
 			background-color: $info-board-text-colour;
 		}
+
+		.title-player {
+			width: 50%;
+		}
+	}
+
+	.button-area {
+		margin-bottom: 2em;
+		text-align: center;
 	}
 
 	.game-over-area {

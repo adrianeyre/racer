@@ -8,6 +8,7 @@ export default interface IRacerState {
 	containerHeight: number;
 	containerMargin: number;
 	timer?: any;
+	level: number;
 	carTimer?: any;
 	timerInterval: number;
 	timerCarInterval: number;

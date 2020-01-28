@@ -9,7 +9,7 @@ export default class IFileService implements IIFileService {
 			url: `./levels/level${ level.toString().length === 1 ? '0' : ''}${ level }.dat`,
 		});
 
-		return  response.data;
+		return response.data;
 	}
 
 	public readPlayerData = async(level: number): Promise<number[]> => {

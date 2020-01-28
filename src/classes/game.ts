@@ -28,7 +28,7 @@ export default class Game implements IGame {
 	readonly TOTAL_LAPS: number = 10;
 
 	constructor(config: IRacerProps) {
-		this.level = 1;
+		this.level = config.level || 1;
 		this.totalLaps = this.TOTAL_LAPS;
 		this.increment = 0;
 		this.timer = 0;
