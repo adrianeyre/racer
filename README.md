@@ -2,6 +2,8 @@
 
 #### Technologies: TypeScript, React, SCSS
 
+The aim of the game is to navigate your car around the track avoiding the grass and other cars. Beware of the oil spills that will cause you to slip!
+
 ## Index
 * [Installation and Run](#Install)
 * [Screen Shots](#Shots)
@@ -23,4 +25,3 @@ $ npm start
 
 ## <a name="Play">Racer</a>
 * [Racer](http://adrianeyre.co.uk/racer)
-
