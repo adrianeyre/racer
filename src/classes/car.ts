@@ -36,6 +36,7 @@ import crash04 from '../images/crash-04.png';
 
 export default class Car implements ICar {
 	public key: string;
+	public name: string;
 	public visable: boolean;
 	public outline: boolean;
 	public x: number;
@@ -52,10 +53,13 @@ export default class Car implements ICar {
 	public type: SpriteTypeEnum;
 	public direction: DirectEnum;
 	public isAlive: boolean;
-	public crashing: number;
+	public crashIteration: number;
+	public crashed: boolean;
+	public halfWay: boolean;
 	public maxSpeed: number
 	public startIteration: number;
 	public iteration: number;
+	public time: number;
 
 	readonly CAR_WIDTH: number = 1;
 	readonly CAR_HEIGHT: number = 1;
@@ -81,9 +85,11 @@ export default class Car implements ICar {
 
 	constructor(config: ICarProps) {
 		this.key = config.key;
+		this.name = config.name;
 		this.visable = true;
 		this.outline = false;
 		this.speed = 0;
+		this.time = 0;
 		this.startX = config.startX;
 		this.startY = config.startY;
 		this.x = this.startX;
@@ -97,7 +103,9 @@ export default class Car implements ICar {
 		this.image = '';
 		this.type = config.type;
 		this.isAlive = true;
-		this.crashing = -1;
+		this.crashIteration = -1;
+		this.crashed = false;
+		this.halfWay = false;
 		this.maxSpeed = config.maxSpeed;
 		this.startIteration = config.startIteration;
 		this.iteration = this.startIteration;
@@ -107,7 +115,7 @@ export default class Car implements ICar {
 
 	public move = (board: IBoard, car: ICar, cars: ICar[]): PlayerResultEnum => {
 		let result = PlayerResultEnum.SAFE;
-		if (this.crashing < 0) this.updateCarPosition();
+		if (!this.crashed) this.updateCarPosition();
 
 		if (
 			this.x < 0 ||
@@ -117,10 +125,15 @@ export default class Car implements ICar {
 			board.hasHitWall(this.x, this.y) ||
 			this.hitCar(car, cars)
 		) {
-			result = this.crashCar();
+			this.crashed = true;
 		};
 
+		if (this.crashed) result = this.crashCar();
+
 		this.updateImage();
+		this.checkHalfWayPoint(board);
+		this.checkFinishPoint(board)
+		
 		return result;
 	}
 
@@ -146,13 +159,17 @@ export default class Car implements ICar {
 		if (this.direction < DirectEnum.UP) this.direction = DirectEnum.UP_LEFT;
 	}
 
+	public updateTimer = (time: number): number => this.time = time;
+
 	public resetStart = (x: number, y: number): void => {
 		this.x = x;
 		this.y = y;
 		this.direction = DirectEnum.RIGHT;
-		this.crashing = -1;
+		this.crashIteration = -1;
+		this.crashed = false;
 		this.speed = 0;
 		this.iteration = 11;
+		this.halfWay = false;
 		this.updateImage();
 	}
 
@@ -161,9 +178,20 @@ export default class Car implements ICar {
 	}
 
 	private updateImage = (): void => {
-		if (this.crashing < 0) return this.image = this.playerImages[this.type][this.direction - 1];
+		if (!this.crashed) return this.image = this.playerImages[this.type][this.direction - 1];
 
-		this.image = this.playerImages.crash[this.crashing];
+		this.image = this.playerImages.crash[this.crashIteration];
+	}
+
+	private checkHalfWayPoint = (board: IBoard): void => {
+		if (board.isHalfWay(this.x, this.y)) this.halfWay = true;
+	}
+
+	private checkFinishPoint = (board: IBoard): void => {
+		if (board.isLapFinished(this.x, this.y) && this.halfWay) {
+			this.halfWay = false;
+			this.laps ++;
+		}
 	}
 
 	private hitCar = (car: ICar, cars: ICar[]): boolean => {
@@ -172,19 +200,24 @@ export default class Car implements ICar {
 		if (!otherCars) return result;
 
 		otherCars.forEach((otherCar: ICar) => {
-			if (otherCar.x === car.x && otherCar.y === car.y) result = true;
+			if (otherCar.x === car.x && otherCar.y === car.y && !otherCar.crashed) {
+				result = true;
+				otherCar.crashed = true;
+			}
 		});
 
 		return result;
 	}
 
 	private crashCar = (): PlayerResultEnum => {
-		this.crashing ++;
+		this.crashIteration ++;
+		this.crashed = true;
 		this.speed = 1;
 		this.direction = DirectEnum.STOOD;
 		
-		if (this.crashing > this.playerImages.crash.length - 1) {
-			this.crashing = -1;
+		if (this.crashIteration > this.playerImages.crash.length - 1) {
+			this.crashIteration = -1;
+			this.crashed = false;
 			return PlayerResultEnum.CRASHED;
 		}
 

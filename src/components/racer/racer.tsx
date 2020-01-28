@@ -7,7 +7,7 @@ import IRacerProps from './interfaces/racer-props';
 import IRacerState from './interfaces/racer-state';
 import DrawSprite from '../draw-sprite/draw-sprite';
 import InfoBoard from '../info-board/info-board';
-import MobileButtons from '../mobile-buttons/mobile-buttons';
+import GameStatusBottom from '../game-status-bottom/game-status-bottom';
 
 import './styles/racer.scss';
 
@@ -24,6 +24,7 @@ export default class Racer extends React.Component<IRacerProps, IRacerState> {
 			containerHeight: 800,
 			containerMargin: 0,
 			timerInterval: 0,
+			timerCarInterval: 0,
 			game: new Game(this.props),
 		}
 
@@ -53,9 +54,9 @@ export default class Racer extends React.Component<IRacerProps, IRacerState> {
 				{ this.state.game.board.sprites?.map((sprite: ISprite) => <DrawSprite key={ sprite.key } sprite={ sprite } handleClick={ this.handleSpriteClick } height={ this.state.spriteHeight } width={ this.state.spriteWidth } containerWidth={ this.state.containerWidth } />) }
 
 				{ this.state.game.cars?.map((sprite: ICar) => <DrawSprite key={ sprite.key } sprite={ sprite } handleClick={ this.handleCarClick } height={ this.state.spriteHeight } width={ this.state.spriteWidth } containerWidth={ this.state.containerWidth } />) }
-			</div> }
 
-			{ this.state.game.isGameInPlay && this.state.containerWidth < 600 && <div style={ this.styleGameButtons() }><MobileButtons handleMobileButton={ this.handleMobileButton }/></div> }
+				<div style={ this.styleStatusBottom() }><GameStatusBottom cars={ this.state.game.cars } totalLaps={ this.state.game.totalLaps } /></div>
+			</div> }
 		</div>
 	}
 
@@ -70,11 +71,11 @@ export default class Racer extends React.Component<IRacerProps, IRacerState> {
 		maxWidth: `${ this.state.containerHeight }px`,
 	})
 
-	private styleGameButtons = () => ({
+	private styleStatusBottom = () => ({
 		position: 'absolute' as 'absolute',
 		width: `100%`,
 		maxWidth: `${ this.state.containerHeight }px`,
-		top: `${ this.state.containerWidth / 100 * 72 }px`,
+		top: `${ this.state.containerWidth / 100 * 70 }px`,
 	})
 
 	private startGame = async (): Promise<void> => {
@@ -112,11 +113,15 @@ export default class Racer extends React.Component<IRacerProps, IRacerState> {
 		const timerInterval = this.state.game.timerInterval;
 		const timer = setInterval(this.myTimer, this.state.game.timerInterval);
 
-		await this.setState(() => ({ timer, timerInterval }));
+		const timerCarInterval = this.state.game.timerCarInterval;
+		const carTimer = setInterval(this.myCarTimer, this.state.game.timerCarInterval);
+
+		await this.setState(() => ({ timer, timerInterval, carTimer, timerCarInterval }));
 	}
 
 	private stopTimer = async (): Promise<void> => {
 		clearInterval(this.state.timer);
+		clearInterval(this.state.carTimer);
 
 		await this.setState(() => ({ timer: undefined }));
 	}
@@ -130,14 +135,22 @@ export default class Racer extends React.Component<IRacerProps, IRacerState> {
 		if (!this.state.game.isGameInPlay) this.stopTimer();
 	}
 
+	private myCarTimer = (): void => {
+		const game = this.state.game
+		game.handleCarTimer();
+		this.handleTimerUpdates();
+
+		this.setState(prev => ({ game }));
+		if (!this.state.game.isGameInPlay) this.stopTimer();
+	}
+
 	private handleTimerUpdates = () => {
-		if (this.state.timerInterval === this.state.game.timerInterval) return;
+		if (this.state.timerInterval === this.state.game.timerInterval || this.state.timerCarInterval === this.state.game.timerCarInterval) return;
 
 		this.stopTimer();
 		this.startTimer();
 	}
 
-	private handleMobileButton = async (direction: PlayerResultEnum): Promise<void> => await this.handleInput(direction);
 	private handleSpriteClick = async (sprite: ISprite) => {}
 	private handleCarClick = (sprite: ICar) => {}
 }

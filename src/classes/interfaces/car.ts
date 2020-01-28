@@ -5,6 +5,7 @@ import IBoard from './board';
 
 export default interface ICar {
 	key: string;
+	name: string;
 	visable: boolean;
 	outline: boolean;
 	speed: number;
@@ -19,12 +20,16 @@ export default interface ICar {
 	score: number;
 	direction: DirectionEnum;
 	image: string;
+	time: number;
 	type: SpriteTypeEnum;
 	isAlive: boolean;
-	crashing: number;
+	crashIteration: number;
+	crashed: boolean;
+	halfWay: boolean;
 	startIteration: number;
 	iteration: number;
 	move(board: IBoard, car: ICar, cars: ICar[]): PlayerResultEnum;
+	updateTimer(time: number): number;
 	resetStart(x: number, y: number): void;
 	speedUp(): void;
 	slowDown(): void;

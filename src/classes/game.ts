@@ -12,22 +12,30 @@ export default class Game implements IGame {
 	public cars: any;
 	public board: IBoard;
 	public level: number;
+	public totalLaps: number;
 	public increment: number;
 	public isGameInPlay: boolean;
 	public timerInterval: number;
+	public timerCarInterval: number;
+	public timer: number;
 	
 	private player1: number = -1;
 	// private player2: number = -1;
 
 	readonly DEFAULT_TIMER_INTERVAL: number = 30;
+	readonly DEFAULT_CAR_TIMER_INTERVAL: number = 10;
 	readonly MAX_INCREMENT: number = 10;
+	readonly TOTAL_LAPS: number = 10;
 
 	constructor(config: IRacerProps) {
 		this.level = 1;
+		this.totalLaps = this.TOTAL_LAPS;
 		this.increment = 0;
+		this.timer = 0;
 		this.board = new Board();
 		this.isGameInPlay = false;
 		this.timerInterval = this.DEFAULT_TIMER_INTERVAL;
+		this.timerCarInterval = this.DEFAULT_CAR_TIMER_INTERVAL;
 		this.cars = []
 
 		this.gameSetup();
@@ -55,6 +63,11 @@ export default class Game implements IGame {
 		if (this.increment > this.MAX_INCREMENT) this.increment = 0;
 
 		this.cars.forEach((car: ICar) => this.checkCar(car));
+	}
+
+	public handleCarTimer = (): void => {
+		this.timer ++;
+		this.cars.forEach((car: ICar) => car.updateTimer(this.timer));
 	}
 
 	private checkCar = (car: ICar): void => {
@@ -92,6 +105,7 @@ export default class Game implements IGame {
 		this.cars = [
 			new Player({
 				key: 'player01',
+				name: 'Player 1',
 				startX: this.board.playerStartData[0].x,
 				startY: this.board.playerStartData[0].y,
 				type: SpriteTypeEnum.Player01,
@@ -101,6 +115,7 @@ export default class Game implements IGame {
 			}),
 			new Computer({
 				key: 'computer01',
+				name: 'Computer 1',
 				startX: this.board.playerStartData[1].x,
 				startY: this.board.playerStartData[1].y,
 				type: SpriteTypeEnum.Computer,
@@ -109,6 +124,7 @@ export default class Game implements IGame {
 			}),
 			new Computer({
 				key: 'computer02',
+				name: 'Computer 2',
 				startX: this.board.playerStartData[2].x,
 				startY: this.board.playerStartData[2].y,
 				type: SpriteTypeEnum.Computer,
@@ -117,6 +133,7 @@ export default class Game implements IGame {
 			}),
 			new Computer({
 				key: 'computer03',
+				name: 'Computer 3',
 				startX: this.board.playerStartData[3].x,
 				startY: this.board.playerStartData[3].y,
 				type: SpriteTypeEnum.Computer,

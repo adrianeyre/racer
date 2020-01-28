@@ -12,4 +12,6 @@ export default interface IBoard {
 	readLevel(level: number): Promise<void>;
 	hasHitWall(x: number, y: number): boolean;
 	findBlock(block: number): any;
+	isHalfWay(x: number, y: number): boolean;
+	isLapFinished(x: number, y: number): boolean;
 }
