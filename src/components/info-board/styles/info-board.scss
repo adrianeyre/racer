@@ -32,6 +32,10 @@ $info-board-text-colour: white;
 	.button-area {
 		margin-bottom: 2em;
 		text-align: center;
+
+		.button-title {
+			margin-right: 1em;
+		}
 	}
 
 	.game-over-area {

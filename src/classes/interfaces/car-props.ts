@@ -9,4 +9,5 @@ export default interface ICarProps {
 	maxSpeed: number;
 	startIteration: number;
 	zIndex?: number;
+	totalLaps: number;
 }

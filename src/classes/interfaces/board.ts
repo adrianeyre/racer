@@ -1,6 +1,7 @@
 import IFileService from '../../services/interfaces/file-service';
 import IPlayerStartData from '../../services/interfaces/player-start-data';
 import ISprite from '../interfaces/sprite';
+import BlockEnum from '../enums/block-enum';
 
 export default interface IBoard {
 	board: number[][];
@@ -9,10 +10,11 @@ export default interface IBoard {
 	boardHeight: number;
 	fileService: IFileService;
 	playerStartData: IPlayerStartData[];
+	oilX: number;
+	oilY: number;
 	readLevel(level: number): Promise<void>;
-	hasHitWall(x: number, y: number): boolean;
 	findBlock(block: number): any;
-	isHalfWay(x: number, y: number): boolean;
-	isBridge(x: number, y: number): boolean;
-	isLapFinished(x: number, y: number): boolean;
+	isBlock(x: number, y: number, block: BlockEnum): boolean;
+	setOil(): void;
+	removeOil(): void;
 }

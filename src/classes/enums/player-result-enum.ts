@@ -2,6 +2,7 @@ enum PlayerResultEnum {
 	SAFE = 0,
 	CRASHING = 1,
 	CRASHED = 2,
+	FINISH = 3,
 	ARROW_UP = 38,
 	ARROW_DOWN = 40,
 	ARROW_RIGHT = 39,

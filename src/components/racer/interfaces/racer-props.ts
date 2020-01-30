@@ -3,4 +3,6 @@ export default interface IRacerProps {
 	initialPlayerX?: number;
 	initialPlayerY?: number;
 	level?: number;
+	totalLaps?: number;
+	difficulty?: number;
 }

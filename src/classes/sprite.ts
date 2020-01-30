@@ -12,6 +12,7 @@ import level07Board from '../images/level-07.png';
 import level08Board from '../images/level-08.png';
 import level09Board from '../images/level-09.png';
 import level10Board from '../images/level-10.png';
+import oil from '../images/oil.png';
 
 export default class Sprite implements ISprite {
 	public key: string;
@@ -28,12 +29,13 @@ export default class Sprite implements ISprite {
 	readonly Z_INDEX: number = 5000;
 	readonly spriteImages = {
 		level01Board, level02Board, level03Board, level04Board, level05Board,
-		level06Board, level07Board, level08Board, level09Board, level10Board
+		level06Board, level07Board, level08Board, level09Board, level10Board,
+		oil
 	}
 
 	constructor(config: ISpriteProps) {
 		this.key = config.key;
-		this.visable = true;
+		this.visable = config.visable;
 		this.outline = false;
 		this.x = config.x;
 		this.y = config.y;

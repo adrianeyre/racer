@@ -1,6 +1,7 @@
 import PlayerResultEnum from '../enums/player-result-enum';
 import SpriteTypeEnum from '../enums/sprite-type-enum';
 import DirectionEnum from '../enums/direction-enum';
+import BlockEnum from '../enums/block-enum';
 import IBoard from './board';
 
 export default interface ICar {
@@ -25,9 +26,11 @@ export default interface ICar {
 	isAlive: boolean;
 	crashIteration: number;
 	crashed: boolean;
-	halfWay: boolean;
 	startIteration: number;
 	iteration: number;
+	checkPoint: BlockEnum;
+	totalLaps: number;
+	finished: boolean;
 	move(board: IBoard, car: ICar, cars: ICar[]): PlayerResultEnum;
 	updateTimer(time: number): number;
 	resetStart(x: number, y: number): void;
@@ -37,4 +40,5 @@ export default interface ICar {
 	turnLeft(): void;
 	directCar(board: IBoard): void;
 	alterDirection(): DirectionEnum;
+	finishSpin(): PlayerResultEnum
 }

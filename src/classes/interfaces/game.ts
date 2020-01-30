@@ -8,6 +8,8 @@ export default interface IGame {
 	level: number;
 	totalLaps: number;
 	increment: number;
+	speedUpIncrement: number;
+	oilIncrement: number;
 	timer: number;
 	isGameInPlay: boolean;
 	timerInterval: number;

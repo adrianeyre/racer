@@ -2,6 +2,7 @@ enum StriteTypeEnum {
 	Player01 = 'player01',
 	Player02 = 'player02',
 	Computer = 'computer',
+	Oil = 'oil',
 	Level01Board = 'level01Board',
 	Level02Board = 'level02Board',
 	Level03Board = 'level03Board',

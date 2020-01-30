@@ -26,6 +26,8 @@ export default class Racer extends React.Component<IRacerProps, IRacerState> {
 			timerInterval: 0,
 			timerCarInterval: 0,
 			level: 1,
+			totalLaps: 10,
+			difficulty: 1,
 			game: new Game(this.props),
 		}
 
@@ -48,7 +50,7 @@ export default class Racer extends React.Component<IRacerProps, IRacerState> {
 	public render() {
 		return <div className="racer-play-container" ref={(d) => { this.container = d }} style={ this.styleContainer() }>
 			{ !this.state.game.isGameInPlay && <div style={ this.styleInfoBoard() }>
-				<InfoBoard level={ this.state.game.level } gameOver={ false } startGame={ this.startGame } score={ 999 } containerHeight={ this.state.containerHeight } />
+				<InfoBoard level={ this.state.game.level } totalLaps={ this.state.totalLaps } difficulty={ this.state.difficulty } gameOver={ false } startGame={ this.startGame } score={ 999 } containerHeight={ this.state.containerHeight } />
 			</div> }
 
 			{ this.state.game.isGameInPlay && <div className="play-area">
@@ -79,8 +81,8 @@ export default class Racer extends React.Component<IRacerProps, IRacerState> {
 		top: `${ this.state.containerWidth / 100 * 70 }px`,
 	})
 
-	private startGame = async (level: number): Promise<void> => {
-		const props = { ...this.props, level};
+	private startGame = async (level: number, totalLaps: number, difficulty: number): Promise<void> => {
+		const props = { ...this.props, level, totalLaps, difficulty };
 		const game = new Game(props);
 		game.isGameInPlay = true;
 		await this.startTimer();

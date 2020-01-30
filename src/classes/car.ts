@@ -4,6 +4,7 @@ import IBoard from './interfaces/board';
 import SpriteTypeEnum from './enums/sprite-type-enum';
 import DirectionEnum from './enums/direction-enum';
 import PlayerResultEnum from './enums/player-result-enum';
+import BlockEnum from './enums/block-enum';
 
 import player01Image01 from '../images/player-01-01.png';
 import player01Image02 from '../images/player-01-02.png';
@@ -55,11 +56,13 @@ export default class Car implements ICar {
 	public isAlive: boolean;
 	public crashIteration: number;
 	public crashed: boolean;
-	public halfWay: boolean;
 	public maxSpeed: number
 	public startIteration: number;
 	public iteration: number;
 	public time: number;
+	public checkPoint: BlockEnum;
+	public totalLaps: number;
+	public finished: boolean;
 
 	readonly CAR_WIDTH: number = 1;
 	readonly CAR_HEIGHT: number = 1;
@@ -105,19 +108,23 @@ export default class Car implements ICar {
 		this.isAlive = true;
 		this.crashIteration = -1;
 		this.crashed = false;
-		this.halfWay = false;
+		this.finished = false;
 		this.maxSpeed = config.maxSpeed;
 		this.startIteration = config.startIteration;
 		this.iteration = this.startIteration;
+		this.checkPoint = BlockEnum.START;
+		this.totalLaps = config.totalLaps;
 
 		this.updateImage();
 	}
 
 	public move = (board: IBoard, car: ICar, cars: ICar[]): PlayerResultEnum => {
+		if (this.finished) return this.finishSpin();
+
 		let result = PlayerResultEnum.SAFE;
 		this.visable = true;
 		const { x, y } = this.updateCarPosition();
-		const hasHitWall = board.hasHitWall(x, y);
+		const hasHitWall = board.isBlock(x, y, BlockEnum.WALL);
 		const hasHitCar = this.hitCar(x, y, car, cars)
 
 		if (
@@ -143,10 +150,10 @@ export default class Car implements ICar {
 			this.y = y;
 		}
 		
-		if (board.isBridge(this.x, this.y)) this.visable = false;
+		if (board.isBlock(this.x, this.y, BlockEnum.GRASS)) this.visable = false;
+		if (board.isBlock(this.x, this.y, BlockEnum.OIL)) this.carSpin();
+		this.isAtCheckPoint(board);
 		this.updateImage();
-		this.checkHalfWayPoint(board);
-		this.checkFinishPoint(board)
 		
 		return result;
 	}
@@ -162,21 +169,20 @@ export default class Car implements ICar {
 	}
 
 	public turnRight = (): void => {
-		if (this.speed === 0) return;
 		this.direction ++;
 		if (this.direction > DirectionEnum.UP_LEFT) this.direction = DirectionEnum.UP;
+		if (this.speed === 0) this.updateImage();
 	}
 
 	public turnLeft = (): void => {
-		if (this.speed === 0) return;
 		this.direction --;
 		if (this.direction < DirectionEnum.UP) this.direction = DirectionEnum.UP_LEFT;
+		if (this.speed === 0) this.updateImage();
 	}
 
 	public updateTimer = (time: number): number => this.time = time;
 
 	public resetStart = (x: number, y: number): void => {
-		this.direction = DirectionEnum.RIGHT;
 		this.crashIteration = -1;
 		this.crashed = false;
 		this.speed = 0;
@@ -192,21 +198,36 @@ export default class Car implements ICar {
 		return DirectionEnum.STOOD;
 	}
 
+	public finishSpin = (): PlayerResultEnum => {
+		this.direction ++;
+		this.speed = 0;
+		if (this.direction > DirectionEnum.UP_LEFT) this.direction = DirectionEnum.UP;
+		this.updateImage();
+
+		return PlayerResultEnum.FINISH;
+	}
+
+	private carSpin = (): void => {
+		this.direction ++;
+		if (this.direction > DirectionEnum.UP_LEFT) this.direction = DirectionEnum.UP;
+	}
+
 	private updateImage = (): void => {
 		if (!this.crashed) return this.image = this.playerImages[this.type][this.direction - 1];
 
 		this.image = this.playerImages.crash[this.crashIteration];
 	}
 
-	private checkHalfWayPoint = (board: IBoard): void => {
-		if (board.isHalfWay(this.x, this.y)) this.halfWay = true;
-	}
+	private isAtCheckPoint = (board: IBoard): void => {
+		if (board.isBlock(this.x, this.y, this.checkPoint + 1)) {
+			this.checkPoint ++;
+			if (this.laps >= this.totalLaps) this.finished = true;
 
-	private checkFinishPoint = (board: IBoard): void => {
-		if (board.isLapFinished(this.x, this.y) && this.halfWay) {
-			this.halfWay = false;
-			this.laps ++;
-		}
+			if (this.checkPoint === BlockEnum.LAST_CHECK_POINT) {
+				this.checkPoint = BlockEnum.PRE_START;
+				this.laps ++;
+			}
+		} 
 	}
 
 	private hitCar = (x: number, y: number, car: ICar, cars: ICar[]): boolean => {
@@ -225,7 +246,7 @@ export default class Car implements ICar {
 		this.crashIteration ++;
 		this.crashed = true;
 		this.speed = 1;
-		this.direction = DirectionEnum.STOOD;
+		// this.direction = DirectionEnum.STOOD;
 		
 		if (this.crashIteration > this.playerImages.crash.length - 1) {
 			this.crashIteration = -1;

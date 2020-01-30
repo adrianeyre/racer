@@ -8,13 +8,13 @@ import player2 from '../../images/player2.png';
 
 import './styles/info-board.scss';
 
-interface ILevels {
+interface IDropDown {
 	name: string;
 	value: number;
 }
 
 export default class InfoBoard extends React.Component<IInfoBoardProps, IInfoBoardState> {
-	private levels: ILevels[] = [
+	private levels: IDropDown[] = [
 		{ name: 'Level 1', value: 1 },
 		{ name: 'Level 2', value: 2 },
 		{ name: 'Level 3', value: 3 },
@@ -27,11 +27,29 @@ export default class InfoBoard extends React.Component<IInfoBoardProps, IInfoBoa
 		{ name: 'Level 10', value: 10 },
 	]
 
+	private laps: IDropDown[] = [
+		{ name: '1 Lap', value: 1 },
+		{ name: '5 Laps', value: 5 },
+		{ name: '10 Laps', value: 10 },
+		{ name: '20 Laps', value: 20 },
+		{ name: '50 Laps', value: 50 },
+		{ name: '100 Laps', value: 100 },
+	]
+
+	private difficulty: IDropDown[] = [
+		{ name: 'Easy', value: 1 },
+		{ name: 'Medium', value: 2 },
+		{ name: 'Hard', value: 3 },
+		{ name: 'Ultra', value: 4 },
+	]
+
 	constructor(props: IInfoBoardProps) {
 		super(props);
 
 		this.state = {
-			level: this.props.level
+			level: this.props.level,
+			totalLaps: this.props.totalLaps,
+			difficulty: this.props.difficulty,
 		}
 
 		this.handleLevelChange = this.handleLevelChange.bind(this);
@@ -94,9 +112,24 @@ export default class InfoBoard extends React.Component<IInfoBoardProps, IInfoBoa
 			</div>
 
 			<div className="button-area">
-				<select value={ this.state.level } onChange={ this.handleLevelChange.bind(this) }>
-					{ this.levels.map((level: ILevels) => <option key={ `level-${ level.value }`} value={ level.value }>{ level.name }</option> )}
+				<span className="button-title">Laps</span>
+				<select value={ this.state.totalLaps } onChange={ this.handleLapsChange.bind(this) }>
+					{ this.laps.map((lap: IDropDown) => <option key={ `lap-${ lap.value }`} value={ lap.value }>{ lap.name }</option> )}
 				</select>
+			</div>
+			<div className="button-area">
+				<span className="button-title">Track</span>
+				<select value={ this.state.level } onChange={ this.handleLevelChange.bind(this) }>
+					{ this.levels.map((level: IDropDown) => <option key={ `level-${ level.value }`} value={ level.value }>{ level.name }</option> )}
+				</select>
+			</div>
+			<div className="button-area">
+				<span className="button-title">Difficulty</span>
+				<select value={ this.state.difficulty } onChange={ this.handleDifficultyChange.bind(this) }>
+					{ this.difficulty.map((difficulty: IDropDown) => <option key={ `level-${ difficulty.value }`} value={ difficulty.value }>{ difficulty.name }</option> )}
+				</select>
+			</div>
+			<div className="button-area">
 				<button type="button" onClick={ this.startGame.bind(this) }>Play Game</button>
 			</div>
 
@@ -114,5 +147,17 @@ export default class InfoBoard extends React.Component<IInfoBoardProps, IInfoBoa
 		await this.setState({ level });
 	};
 
-	private startGame = (): void => this.props.startGame(this.state.level);
+	private handleLapsChange = async (event: any): Promise<void> => {
+		event.preventDefault();
+		const totalLaps = event.target.value
+		await this.setState({ totalLaps });
+	};
+
+	private handleDifficultyChange = async (event: any): Promise<void> => {
+		event.preventDefault();
+		const difficulty = event.target.value
+		await this.setState({ difficulty });
+	};
+
+	private startGame = (): void => this.props.startGame(this.state.level, this.state.totalLaps, this.state.difficulty);
 }

@@ -9,6 +9,8 @@ export default interface IRacerState {
 	containerMargin: number;
 	timer?: any;
 	level: number;
+	totalLaps: number;
+	difficulty: number;
 	carTimer?: any;
 	timerInterval: number;
 	timerCarInterval: number;

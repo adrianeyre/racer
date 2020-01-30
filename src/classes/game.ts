@@ -13,7 +13,10 @@ export default class Game implements IGame {
 	public board: IBoard;
 	public level: number;
 	public totalLaps: number;
+	public difficulty: number;
 	public increment: number;
+	public speedUpIncrement: number;
+	public oilIncrement: number;
 	public isGameInPlay: boolean;
 	public timerInterval: number;
 	public timerCarInterval: number;
@@ -25,17 +28,25 @@ export default class Game implements IGame {
 	readonly DEFAULT_TIMER_INTERVAL: number = 30;
 	readonly DEFAULT_CAR_TIMER_INTERVAL: number = 10;
 	readonly MAX_INCREMENT: number = 10;
+	readonly MAX_SPEED_UP_INCREMENT: number = 20;
 	readonly TOTAL_LAPS: number = 10;
+	readonly DEFAULT_DIFFICULTY: number = 1;
+	readonly OIL_PERCENT: number = 2;
+	readonly OIL_MAX_INCREMENT: number = 150;
 
 	constructor(config: IRacerProps) {
 		this.level = config.level || 1;
 		this.totalLaps = this.TOTAL_LAPS;
 		this.increment = 0;
+		this.speedUpIncrement = 0;
+		this.oilIncrement = 0;
 		this.timer = 0;
 		this.board = new Board();
 		this.isGameInPlay = false;
 		this.timerInterval = this.DEFAULT_TIMER_INTERVAL;
 		this.timerCarInterval = this.DEFAULT_CAR_TIMER_INTERVAL;
+		this.totalLaps = config.totalLaps || this.TOTAL_LAPS;
+		this.difficulty = config.difficulty || this.DEFAULT_DIFFICULTY;
 		this.cars = []
 
 		this.gameSetup();
@@ -62,16 +73,24 @@ export default class Game implements IGame {
 		this.increment ++;
 		if (this.increment > this.MAX_INCREMENT) this.increment = 0;
 
+		this.speedUpIncrement ++;
+		if (this.speedUpIncrement > this.MAX_SPEED_UP_INCREMENT) this.speedUpIncrement = 0;
+
 		this.cars.forEach((car: ICar) => this.checkCar(car));
+		this.handleOil();
 	}
 
 	public handleCarTimer = (): void => {
 		this.timer ++;
-		this.cars.forEach((car: ICar) => car.updateTimer(this.timer));
+		this.cars.forEach((car: ICar) => {
+			if (!car.finished) car.updateTimer(this.timer);
+		});
 	}
 
 	private checkCar = (car: ICar): void => {
+		if (this.increment % 2 === 0 && car.finished) car.finishSpin();
 		if (this.increment % (11 - car.speed) !== 0) return;
+
 		this.speedUp(car);
 		this.directCar(car);
 		this.moveCar(car);
@@ -79,6 +98,7 @@ export default class Game implements IGame {
 
 	private speedUp = (car: ICar): void => {
 		if (car.type !== SpriteTypeEnum.Computer) return;
+		if (this.speedUpIncrement % this.MAX_SPEED_UP_INCREMENT - 1 !== 0) return;
 		car.speedUp();
 	}
 
@@ -99,6 +119,20 @@ export default class Game implements IGame {
 		car.resetStart(this.board.playerStartData[carIndex].x, this.board.playerStartData[carIndex].y);
 	}
 
+	private handleOil = (): void => {
+		if (this.oilIncrement === 0 && Math.floor(Math.random() * 100) > 100 - this.OIL_PERCENT) {
+			this.oilIncrement ++;
+			this.board.setOil();
+		}
+
+		if (this.oilIncrement > 0) this.oilIncrement ++;
+
+		if (this.oilIncrement > this.OIL_MAX_INCREMENT) {
+			this.oilIncrement = 0;
+			this.board.removeOil();
+		}
+	}
+
 	private gameSetup = async (): Promise<void> => {
 		await this.board.readLevel(this.level);
 
@@ -112,6 +146,7 @@ export default class Game implements IGame {
 				maxSpeed: 10,
 				zIndex: 7000,
 				startIteration: 0,
+				totalLaps: this.totalLaps,
 			}),
 			new Computer({
 				key: 'computer01',
@@ -119,8 +154,9 @@ export default class Game implements IGame {
 				startX: this.board.playerStartData[1].x,
 				startY: this.board.playerStartData[1].y,
 				type: SpriteTypeEnum.Computer,
-				maxSpeed: 8,
+				maxSpeed: 10 - (4 - this.difficulty),
 				startIteration: 11,
+				totalLaps: this.totalLaps,
 			}),
 			new Computer({
 				key: 'computer02',
@@ -128,8 +164,9 @@ export default class Game implements IGame {
 				startX: this.board.playerStartData[2].x,
 				startY: this.board.playerStartData[2].y,
 				type: SpriteTypeEnum.Computer,
-				maxSpeed: 8,
+				maxSpeed: 10 - (4 - this.difficulty),
 				startIteration: 31,
+				totalLaps: this.totalLaps,
 			}),
 			new Computer({
 				key: 'computer03',
@@ -137,8 +174,9 @@ export default class Game implements IGame {
 				startX: this.board.playerStartData[3].x,
 				startY: this.board.playerStartData[3].y,
 				type: SpriteTypeEnum.Computer,
-				maxSpeed: 7,
+				maxSpeed: 10 - (4 - this.difficulty),
 				startIteration: 61,
+				totalLaps: this.totalLaps,
 			}),
 		];
 
