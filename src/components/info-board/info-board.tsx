@@ -43,6 +43,11 @@ export default class InfoBoard extends React.Component<IInfoBoardProps, IInfoBoa
 		{ name: 'Ultra', value: 4 },
 	]
 
+	private players: IDropDown[] = [
+		{ name: '1 Player', value: 1 },
+		{ name: '2 Players', value: 2 },
+	]
+
 	constructor(props: IInfoBoardProps) {
 		super(props);
 
@@ -50,6 +55,7 @@ export default class InfoBoard extends React.Component<IInfoBoardProps, IInfoBoa
 			level: this.props.level,
 			totalLaps: this.props.totalLaps,
 			difficulty: this.props.difficulty,
+			players: this.props.players,
 		}
 
 		this.handleLevelChange = this.handleLevelChange.bind(this);
@@ -124,6 +130,12 @@ export default class InfoBoard extends React.Component<IInfoBoardProps, IInfoBoa
 				</select>
 			</div>
 			<div className="button-area">
+				<span className="button-title">Players</span>
+				<select value={ this.state.players } onChange={ this.handlePlayersChange.bind(this) }>
+					{ this.players.map((player: IDropDown) => <option key={ `player-${ player.value }`} value={ player.value }>{ player.name }</option> )}
+				</select>
+			</div>
+			<div className="button-area">
 				<span className="button-title">Difficulty</span>
 				<select value={ this.state.difficulty } onChange={ this.handleDifficultyChange.bind(this) }>
 					{ this.difficulty.map((difficulty: IDropDown) => <option key={ `level-${ difficulty.value }`} value={ difficulty.value }>{ difficulty.name }</option> )}
@@ -159,5 +171,11 @@ export default class InfoBoard extends React.Component<IInfoBoardProps, IInfoBoa
 		await this.setState({ difficulty });
 	};
 
-	private startGame = (): void => this.props.startGame(this.state.level, this.state.totalLaps, this.state.difficulty);
+	private handlePlayersChange = async (event: any): Promise<void> => {
+		event.preventDefault();
+		const players = event.target.value
+		await this.setState({ players });
+	};
+
+	private startGame = (): void => this.props.startGame(this.state.level, this.state.totalLaps, this.state.difficulty, this.state.players);
 }

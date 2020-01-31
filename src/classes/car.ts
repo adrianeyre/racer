@@ -246,7 +246,6 @@ export default class Car implements ICar {
 		this.crashIteration ++;
 		this.crashed = true;
 		this.speed = 1;
-		// this.direction = DirectionEnum.STOOD;
 		
 		if (this.crashIteration > this.playerImages.crash.length - 1) {
 			this.crashIteration = -1;

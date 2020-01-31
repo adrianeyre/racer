@@ -21,16 +21,17 @@ export default class Game implements IGame {
 	public timerInterval: number;
 	public timerCarInterval: number;
 	public timer: number;
+	public players: number;
 	
-	private player1: number = -1;
-	// private player2: number = -1;
-
+	readonly player1: number = 0;
+	readonly player2: number = 1;
 	readonly DEFAULT_TIMER_INTERVAL: number = 30;
 	readonly DEFAULT_CAR_TIMER_INTERVAL: number = 10;
 	readonly MAX_INCREMENT: number = 10;
 	readonly MAX_SPEED_UP_INCREMENT: number = 20;
 	readonly TOTAL_LAPS: number = 10;
 	readonly DEFAULT_DIFFICULTY: number = 1;
+	readonly DEFAULT_PLAYERS: number = 1;
 	readonly OIL_PERCENT: number = 2;
 	readonly OIL_MAX_INCREMENT: number = 150;
 
@@ -47,6 +48,7 @@ export default class Game implements IGame {
 		this.timerCarInterval = this.DEFAULT_CAR_TIMER_INTERVAL;
 		this.totalLaps = config.totalLaps || this.TOTAL_LAPS;
 		this.difficulty = config.difficulty || this.DEFAULT_DIFFICULTY;
+		this.players = config.players || this.DEFAULT_PLAYERS;
 		this.cars = []
 
 		this.gameSetup();
@@ -58,14 +60,22 @@ export default class Game implements IGame {
 				break;
 			case PlayerResultEnum.CRASHED:
 				this.resetCarStart(car); break;
-			case PlayerResultEnum.ARROW_UP:
+			case PlayerResultEnum.PLAYER1_UP:
 				this.cars[this.player1].speedUp(); break;
-			case PlayerResultEnum.ARROW_DOWN:
+			case PlayerResultEnum.PLAYER1_DOWN:
 				this.cars[this.player1].slowDown(); break;
-			case PlayerResultEnum.ARROW_RIGHT:
+			case PlayerResultEnum.PLAYER1_RIGHT:
 				this.cars[this.player1].turnRight(); break;
-			case PlayerResultEnum.ARROW_LEFT:
+			case PlayerResultEnum.PLAYER1_LEFT:
 				this.cars[this.player1].turnLeft(); break;
+			case PlayerResultEnum.PLAYER2_UP:
+				this.cars[this.player2].speedUp(); break;
+			case PlayerResultEnum.PLAYER2_DOWN:
+				this.cars[this.player2].slowDown(); break;
+			case PlayerResultEnum.PLAYER2_RIGHT:
+				this.cars[this.player2].turnRight(); break;
+			case PlayerResultEnum.PLAYER2_LEFT:
+				this.cars[this.player2].turnLeft(); break;
 		}
 	}
 
@@ -148,14 +158,25 @@ export default class Game implements IGame {
 				startIteration: 0,
 				totalLaps: this.totalLaps,
 			}),
-			new Computer({
+			this.players === 1 ? new Computer({
 				key: 'computer01',
 				name: 'Computer 1',
 				startX: this.board.playerStartData[1].x,
 				startY: this.board.playerStartData[1].y,
 				type: SpriteTypeEnum.Computer,
-				maxSpeed: 10 - (4 - this.difficulty),
+				maxSpeed: 10 - (4 - this.difficulty) - Math.floor(Math.random() * 2),
 				startIteration: 11,
+				totalLaps: this.totalLaps,
+			}) :
+			new Player({
+				key: 'player02',
+				name: 'Player 2',
+				startX: this.board.playerStartData[1].x,
+				startY: this.board.playerStartData[1].y,
+				type: SpriteTypeEnum.Player02,
+				maxSpeed: 10,
+				zIndex: 7000,
+				startIteration: 0,
 				totalLaps: this.totalLaps,
 			}),
 			new Computer({
@@ -164,7 +185,7 @@ export default class Game implements IGame {
 				startX: this.board.playerStartData[2].x,
 				startY: this.board.playerStartData[2].y,
 				type: SpriteTypeEnum.Computer,
-				maxSpeed: 10 - (4 - this.difficulty),
+				maxSpeed: 10 - (4 - this.difficulty) - Math.floor(Math.random() * 2),
 				startIteration: 31,
 				totalLaps: this.totalLaps,
 			}),
@@ -174,12 +195,10 @@ export default class Game implements IGame {
 				startX: this.board.playerStartData[3].x,
 				startY: this.board.playerStartData[3].y,
 				type: SpriteTypeEnum.Computer,
-				maxSpeed: 10 - (4 - this.difficulty),
+				maxSpeed: 10 - (4 - this.difficulty) - Math.floor(Math.random() * 2),
 				startIteration: 61,
 				totalLaps: this.totalLaps,
 			}),
 		];
-
-		this.player1 = 0;
 	}
 }

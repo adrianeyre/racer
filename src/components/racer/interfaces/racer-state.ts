@@ -11,6 +11,7 @@ export default interface IRacerState {
 	level: number;
 	totalLaps: number;
 	difficulty: number;
+	players: number;
 	carTimer?: any;
 	timerInterval: number;
 	timerCarInterval: number;

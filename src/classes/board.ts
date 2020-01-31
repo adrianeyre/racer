@@ -78,12 +78,12 @@ export default class Board implements IBoard {
 		let blockIsRoad = false
 
 		do {
-			this.oilX = Math.floor(Math.random() * this.board[0].length);
-			this.oilY = Math.floor(Math.random() * this.board.length);
+			this.oilX = Math.floor(Math.random() * (this.board[0].length - 1)) + 1;
+			this.oilY = Math.floor(Math.random() * (this.board.length - 1)) + 1;
 			if (this.board[this.oilY-1][this.oilX-1] === BlockEnum.ROAD) blockIsRoad = true;
 		} while (!blockIsRoad);
 
-		this.board[this.oilY-1][this.oilX-1] = 99;
+		this.board[this.oilY-1][this.oilX-1] = BlockEnum.OIL;
 		const oil = this.sprites.find((sprite: ISprite) => sprite.key === 'oil');
 		if (!oil) return;
 
@@ -96,7 +96,7 @@ export default class Board implements IBoard {
 		const oil = this.sprites.find((sprite: ISprite) => sprite.key === 'oil');
 		if (!oil) return;
 
-		this.board[this.oilY-1][this.oilX-1] = 0;
+		this.board[this.oilY-1][this.oilX-1] = BlockEnum.ROAD;
 		oil.x = 1;
 		oil.y = 1;
 		oil.visable = false;

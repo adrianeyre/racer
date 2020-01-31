@@ -4,6 +4,7 @@ export default interface IInfoBoardProps {
 	level: number;
 	totalLaps: number;
 	difficulty: number;
+	players: number;
 	containerHeight: number;
-	startGame(level: number, totalLaps: number, difficulty: number): void;
+	startGame(level: number, totalLaps: number, difficulty: number, players: number): void;
 }

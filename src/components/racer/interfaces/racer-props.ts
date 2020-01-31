@@ -5,4 +5,5 @@ export default interface IRacerProps {
 	level?: number;
 	totalLaps?: number;
 	difficulty?: number;
+	players?: number;
 }

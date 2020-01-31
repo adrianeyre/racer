@@ -7,6 +7,7 @@ export default interface IGame {
 	board: IBoard;
 	level: number;
 	totalLaps: number;
+	players: number;
 	increment: number;
 	speedUpIncrement: number;
 	oilIncrement: number;

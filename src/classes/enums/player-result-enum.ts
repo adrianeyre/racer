@@ -3,10 +3,14 @@ enum PlayerResultEnum {
 	CRASHING = 1,
 	CRASHED = 2,
 	FINISH = 3,
-	ARROW_UP = 38,
-	ARROW_DOWN = 40,
-	ARROW_RIGHT = 39,
-	ARROW_LEFT = 37,
+	PLAYER1_UP = 38,
+	PLAYER1_DOWN = 40,
+	PLAYER1_RIGHT = 39,
+	PLAYER1_LEFT = 37,
+	PLAYER2_UP = 87,
+	PLAYER2_DOWN = 83,
+	PLAYER2_RIGHT = 68,
+	PLAYER2_LEFT = 65,
 }
 
 export default PlayerResultEnum;
