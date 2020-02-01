@@ -221,13 +221,11 @@ export default class Car implements ICar {
 	private isAtCheckPoint = (board: IBoard): void => {
 		if (board.isBlock(this.x, this.y, this.checkPoint + 1)) {
 			this.checkPoint ++;
-			if (this.laps >= this.totalLaps) this.finished = true;
 
-			if (this.checkPoint === BlockEnum.LAST_CHECK_POINT) {
-				this.checkPoint = BlockEnum.PRE_START;
-				this.laps ++;
-			}
-		} 
+			if (this.checkPoint === BlockEnum.START) this.laps ++;
+			if (this.laps >= this.totalLaps) this.finished = true;
+			if (this.checkPoint === BlockEnum.LAST_CHECK_POINT) this.checkPoint = BlockEnum.PRE_START;
+		}
 	}
 
 	private hitCar = (x: number, y: number, car: ICar, cars: ICar[]): boolean => {
