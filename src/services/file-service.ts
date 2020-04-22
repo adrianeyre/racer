@@ -18,6 +18,6 @@ export default class IFileService implements IIFileService {
 			url: `./levels/player-data${ level.toString().length === 1 ? '0' : ''}${ level }.dat`,
 		});
 
-		return  response.data;
+		return response.data;
 	}
 }
