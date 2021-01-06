@@ -8,6 +8,7 @@ describe('Sprite', () => {
 	beforeEach(() => {
 		defaultConfig = {
 			key: 'level01',
+			visable: true,
 			x: 10,
 			y: 10,
 			width: 1,
