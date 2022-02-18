@@ -7,10 +7,14 @@ describe('Player', () => {
 	it('Should create Player class', () => {
 		const player = new Player({
 			key: 'player01',
-				startX: 1,
-				startY: 1,
-				type: SpriteTypeEnum.Player01,
-				zIndex: 7000,
+			name: 'player01',
+			startX: 1,
+			startY: 1,
+			type: SpriteTypeEnum.Player01,
+			maxSpeed: 100,
+			startIteration: 1,
+			zIndex: 7000,
+			totalLaps: 100,
 		});
 
 		expect(player.key).toEqual('player01');

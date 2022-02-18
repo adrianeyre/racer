@@ -11,10 +11,14 @@ describe('Draw Sprite', () => {
 		const defaultProps: IDrawSpriteProps = {
 			sprite: new Player({
 				key: 'player01',
+				name: 'player01',
 				startX: 1,
 				startY: 1,
 				type: SpriteTypeEnum.Player01,
+				maxSpeed: 100,
+				startIteration: 1,
 				zIndex: 7000,
+				totalLaps: 100,
 			}),
 			height: 1,
 			width: 1,
