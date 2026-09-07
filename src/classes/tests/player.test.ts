@@ -26,7 +26,9 @@ describe('Player', () => {
 		expect(player.zIndex).toEqual(7000);
 		expect(player.direction).toEqual(DirectionEnum.RIGHT);
 		expect(player.score).toEqual(0);
-		expect(player.image).toEqual('player-01-03.png');
+		// The bundler rewrites an image import to a URL, so the frame is asserted
+		// by the file it points at rather than by the whole resolved path.
+		expect(player.image).toContain('player-01-03.png');
 		expect(player.isAlive).toEqual(true);
 	});
 });

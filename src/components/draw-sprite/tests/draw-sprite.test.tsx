@@ -1,5 +1,4 @@
-import React from 'react';
-import { shallow } from 'enzyme';
+import { render } from '@testing-library/react';
 
 import DrawSprite from '../draw-sprite';
 import IDrawSpriteProps from '../interfaces/draw-sprite-props';
@@ -23,10 +22,10 @@ describe('Draw Sprite', () => {
 			height: 1,
 			width: 1,
 			containerWidth: 100,
-			handleClick: jest.fn(),
+			handleClick: vi.fn(),
 		};
 
-		const drawSprite = shallow(<DrawSprite {...defaultProps} />);
-		expect(drawSprite).toMatchSnapshot();
+		const { asFragment } = render(<DrawSprite {...defaultProps} />);
+		expect(asFragment()).toMatchSnapshot();
 	});
 });

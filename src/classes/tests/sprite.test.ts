@@ -3,7 +3,7 @@ import Sprite from '../sprite';
 import ISpriteProps from '../interfaces/sprite-props';
 
 describe('Sprite', () => {
-	let defaultConfig: ISpriteProps
+	let defaultConfig: ISpriteProps;
 
 	beforeEach(() => {
 		defaultConfig = {
@@ -15,8 +15,8 @@ describe('Sprite', () => {
 			height: 1,
 			type: SpriteTypeEnum.Level01Board,
 			zIndex: 1000,
-		}
-	})
+		};
+	});
 
 	it('Should create Sprite class', () => {
 		const sprite = new Sprite(defaultConfig);
@@ -28,7 +28,7 @@ describe('Sprite', () => {
 		expect(sprite.width).toEqual(1);
 		expect(sprite.height).toEqual(1);
 		expect(sprite.zIndex).toEqual(1000);
-		expect(sprite.image).toEqual('level-01.png');
+		expect(sprite.image).toContain('level-01.png');
 		expect(sprite.type).toEqual(SpriteTypeEnum.Level01Board);
 	});
 });
