@@ -2,7 +2,7 @@
   "name": "racer",
   "version": "1.0.0",
   "private": true,
-  "description": "Racer \u2014 a top-down racing game played in the browser, written in TypeScript and React",
+  "description": "Racer — a top-down racing game played in the browser, written in TypeScript and React",
   "keywords": [
     "racer",
     "game",
