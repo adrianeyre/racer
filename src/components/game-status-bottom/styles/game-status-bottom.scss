@@ -1,4 +1,4 @@
-@import '../../default-styles/colours.scss';
+@use '../../default-styles/colours' as *;
 
 .game-status-bottom {
 	width: 100%;
@@ -14,17 +14,17 @@
 		.car-name {
 			text-align: center;
 			margin-top: 5%;
-			height: 25%
+			height: 25%;
 		}
 
 		.car-details {
 			text-align: center;
-			height: 25%
+			height: 25%;
 		}
 
 		.car-time {
 			margin-left: 2em;
-			height: 25%
+			height: 25%;
 		}
 	}
 }

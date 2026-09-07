@@ -3,6 +3,12 @@ import IPlayerStartData from '../../services/interfaces/player-start-data';
 import ISprite from '../interfaces/sprite';
 import BlockEnum from '../enums/block-enum';
 
+/** Where a numbered block sits on the board, or `null` twice if it has none. */
+export interface IBlockPosition {
+	xPos: number | null;
+	yPos: number | null;
+}
+
 export default interface IBoard {
 	board: number[][];
 	sprites: ISprite[];
@@ -13,7 +19,7 @@ export default interface IBoard {
 	oilX: number;
 	oilY: number;
 	readLevel(level: number): Promise<void>;
-	findBlock(block: number): any;
+	findBlock(block: number): IBlockPosition;
 	isBlock(x: number, y: number, block: BlockEnum): boolean;
 	setOil(): void;
 	removeOil(): void;

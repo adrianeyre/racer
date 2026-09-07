@@ -8,7 +8,7 @@ export default interface ISprite {
 	y: number;
 	width: number;
 	height: number;
-	zIndex: number
+	zIndex: number;
 	image: string;
 	type: SpriteTypeEnum;
 }
