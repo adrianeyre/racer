@@ -1,3 +1,303 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Racer Run Should render correctly 1`] = `ShallowWrapper {}`;
+exports[`Racer Run > Should render correctly 1`] = `
+<DocumentFragment>
+  <div
+    class="racer-play-container"
+    style="max-width: 0px; margin-left: 512px;"
+  >
+    <div
+      style="position: absolute; width: 100%; max-width: 0px;"
+    >
+      <div
+        class="info-board"
+        style="width: 80%; max-width: 0px;"
+      >
+        <div
+          class="info-board-header"
+        >
+          <img
+            alt="player"
+            src="/src/images/player1.png"
+          />
+          <span
+            class="header-text"
+          >
+            Racer
+          </span>
+          <img
+            alt="player"
+            src="/src/images/player2.png"
+          />
+        </div>
+        <div
+          class="info-board-instructions"
+        >
+          <p>
+            The aim of the game is to navigate your car around the track avoiding the grass and other cars. Beware of the oil spills that will cause you to slip!
+          </p>
+          <table>
+            <tbody>
+              <tr>
+                <td
+                  class="title-player"
+                  colspan="2"
+                >
+                  Player 1 Keys
+                </td>
+                <td
+                  class="title-player"
+                  colspan="2"
+                >
+                  Player 2 Keys
+                </td>
+              </tr>
+              <tr>
+                <td
+                  class="title"
+                >
+                  Direction
+                </td>
+                <td
+                  class="title"
+                >
+                  Key
+                </td>
+                <td
+                  class="title"
+                >
+                  Direction
+                </td>
+                <td
+                  class="title"
+                >
+                  Key
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Up
+                </td>
+                <td>
+                  Arrow Up
+                </td>
+                <td>
+                  Up
+                </td>
+                <td>
+                  w
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Down
+                </td>
+                <td>
+                  Arrow Down
+                </td>
+                <td>
+                  Down
+                </td>
+                <td>
+                  s
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Left
+                </td>
+                <td>
+                  Arrow Left
+                </td>
+                <td>
+                  Left
+                </td>
+                <td>
+                  a
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Right
+                </td>
+                <td>
+                  Arrow Right
+                </td>
+                <td>
+                  Right
+                </td>
+                <td>
+                  d
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div
+          class="button-area"
+        >
+          <span
+            class="button-title"
+          >
+            Laps
+          </span>
+          <select>
+            <option
+              value="1"
+            >
+              1 Lap
+            </option>
+            <option
+              value="5"
+            >
+              5 Laps
+            </option>
+            <option
+              value="10"
+            >
+              10 Laps
+            </option>
+            <option
+              value="20"
+            >
+              20 Laps
+            </option>
+            <option
+              value="50"
+            >
+              50 Laps
+            </option>
+            <option
+              value="100"
+            >
+              100 Laps
+            </option>
+          </select>
+        </div>
+        <div
+          class="button-area"
+        >
+          <span
+            class="button-title"
+          >
+            Track
+          </span>
+          <select>
+            <option
+              value="1"
+            >
+              Level 1
+            </option>
+            <option
+              value="2"
+            >
+              Level 2
+            </option>
+            <option
+              value="3"
+            >
+              Level 3
+            </option>
+            <option
+              value="4"
+            >
+              Level 4
+            </option>
+            <option
+              value="5"
+            >
+              Level 5
+            </option>
+            <option
+              value="6"
+            >
+              Level 6
+            </option>
+            <option
+              value="7"
+            >
+              Level 7
+            </option>
+            <option
+              value="8"
+            >
+              Level 8
+            </option>
+            <option
+              value="9"
+            >
+              Level 9
+            </option>
+            <option
+              value="10"
+            >
+              Level 10
+            </option>
+          </select>
+        </div>
+        <div
+          class="button-area"
+        >
+          <span
+            class="button-title"
+          >
+            Players
+          </span>
+          <select>
+            <option
+              value="1"
+            >
+              1 Player
+            </option>
+            <option
+              value="2"
+            >
+              2 Players
+            </option>
+          </select>
+        </div>
+        <div
+          class="button-area"
+        >
+          <span
+            class="button-title"
+          >
+            Difficulty
+          </span>
+          <select>
+            <option
+              value="1"
+            >
+              Easy
+            </option>
+            <option
+              value="2"
+            >
+              Medium
+            </option>
+            <option
+              value="3"
+            >
+              Hard
+            </option>
+            <option
+              value="4"
+            >
+              Ultra
+            </option>
+          </select>
+        </div>
+        <div
+          class="button-area"
+        >
+          <button
+            type="button"
+          >
+            Play Game
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;

@@ -9,7 +9,7 @@ import Computer from './computer';
 import ICar from './interfaces/car';
 
 export default class Game implements IGame {
-	public cars: any;
+	public cars: ICar[];
 	public board: IBoard;
 	public level: number;
 	public totalLaps: number;
@@ -22,7 +22,7 @@ export default class Game implements IGame {
 	public timerCarInterval: number;
 	public timer: number;
 	public players: number;
-	
+
 	readonly player1: number = 0;
 	readonly player2: number = 1;
 	readonly DEFAULT_TIMER_INTERVAL: number = 30;
@@ -49,7 +49,7 @@ export default class Game implements IGame {
 		this.totalLaps = config.totalLaps || this.TOTAL_LAPS;
 		this.difficulty = config.difficulty || this.DEFAULT_DIFFICULTY;
 		this.players = config.players || this.DEFAULT_PLAYERS;
-		this.cars = []
+		this.cars = [];
 
 		this.gameSetup();
 	}
@@ -59,43 +59,52 @@ export default class Game implements IGame {
 			case PlayerResultEnum.SAFE:
 				break;
 			case PlayerResultEnum.CRASHED:
-				this.resetCarStart(car); break;
+				this.resetCarStart(car);
+				break;
 			case PlayerResultEnum.PLAYER1_UP:
-				this.cars[this.player1].speedUp(); break;
+				this.cars[this.player1].speedUp();
+				break;
 			case PlayerResultEnum.PLAYER1_DOWN:
-				this.cars[this.player1].slowDown(); break;
+				this.cars[this.player1].slowDown();
+				break;
 			case PlayerResultEnum.PLAYER1_RIGHT:
-				this.cars[this.player1].turnRight(); break;
+				this.cars[this.player1].turnRight();
+				break;
 			case PlayerResultEnum.PLAYER1_LEFT:
-				this.cars[this.player1].turnLeft(); break;
+				this.cars[this.player1].turnLeft();
+				break;
 			case PlayerResultEnum.PLAYER2_UP:
-				this.cars[this.player2].speedUp(); break;
+				this.cars[this.player2].speedUp();
+				break;
 			case PlayerResultEnum.PLAYER2_DOWN:
-				this.cars[this.player2].slowDown(); break;
+				this.cars[this.player2].slowDown();
+				break;
 			case PlayerResultEnum.PLAYER2_RIGHT:
-				this.cars[this.player2].turnRight(); break;
+				this.cars[this.player2].turnRight();
+				break;
 			case PlayerResultEnum.PLAYER2_LEFT:
-				this.cars[this.player2].turnLeft(); break;
+				this.cars[this.player2].turnLeft();
+				break;
 		}
-	}
+	};
 
 	public handleTimer = (): void => {
-		this.increment ++;
+		this.increment++;
 		if (this.increment > this.MAX_INCREMENT) this.increment = 0;
 
-		this.speedUpIncrement ++;
+		this.speedUpIncrement++;
 		if (this.speedUpIncrement > this.MAX_SPEED_UP_INCREMENT) this.speedUpIncrement = 0;
 
 		this.cars.forEach((car: ICar) => this.checkCar(car));
 		this.handleOil();
-	}
+	};
 
 	public handleCarTimer = (): void => {
-		this.timer ++;
+		this.timer++;
 		this.cars.forEach((car: ICar) => {
 			if (!car.finished) car.updateTimer(this.timer);
 		});
-	}
+	};
 
 	private checkCar = (car: ICar): void => {
 		if (this.increment % 2 === 0 && car.finished) car.finishSpin();
@@ -104,44 +113,44 @@ export default class Game implements IGame {
 		this.speedUp(car);
 		this.directCar(car);
 		this.moveCar(car);
-	}
+	};
 
 	private speedUp = (car: ICar): void => {
 		if (car.type !== SpriteTypeEnum.Computer) return;
-		if (this.speedUpIncrement % this.MAX_SPEED_UP_INCREMENT - 1 !== 0) return;
+		if ((this.speedUpIncrement % this.MAX_SPEED_UP_INCREMENT) - 1 !== 0) return;
 		car.speedUp();
-	}
+	};
 
 	private directCar = (car: ICar): void => {
 		if (car.type !== SpriteTypeEnum.Computer) return;
 		car.directCar(this.board);
-	}
+	};
 
 	private moveCar = (car: ICar): void => {
 		if (car.speed === 0) return;
 		this.handleInput(car.move(this.board, car, this.cars), car);
-	}
+	};
 
 	private resetCarStart = (car?: ICar): void => {
 		if (!car) return;
 
 		const carIndex = this.cars.indexOf(car);
 		car.resetStart(this.board.playerStartData[carIndex].x, this.board.playerStartData[carIndex].y);
-	}
+	};
 
 	private handleOil = (): void => {
 		if (this.oilIncrement === 0 && Math.floor(Math.random() * 100) > 100 - this.OIL_PERCENT) {
-			this.oilIncrement ++;
+			this.oilIncrement++;
 			this.board.setOil();
 		}
 
-		if (this.oilIncrement > 0) this.oilIncrement ++;
+		if (this.oilIncrement > 0) this.oilIncrement++;
 
 		if (this.oilIncrement > this.OIL_MAX_INCREMENT) {
 			this.oilIncrement = 0;
 			this.board.removeOil();
 		}
-	}
+	};
 
 	private gameSetup = async (): Promise<void> => {
 		await this.board.readLevel(this.level);
@@ -158,27 +167,28 @@ export default class Game implements IGame {
 				startIteration: 0,
 				totalLaps: this.totalLaps,
 			}),
-			this.players === 1 ? new Computer({
-				key: 'computer01',
-				name: 'Computer 1',
-				startX: this.board.playerStartData[1].x,
-				startY: this.board.playerStartData[1].y,
-				type: SpriteTypeEnum.Computer,
-				maxSpeed: 10 - (4 - this.difficulty) - Math.floor(Math.random() * 2),
-				startIteration: 11,
-				totalLaps: this.totalLaps,
-			}) :
-			new Player({
-				key: 'player02',
-				name: 'Player 2',
-				startX: this.board.playerStartData[1].x,
-				startY: this.board.playerStartData[1].y,
-				type: SpriteTypeEnum.Player02,
-				maxSpeed: 10,
-				zIndex: 7000,
-				startIteration: 0,
-				totalLaps: this.totalLaps,
-			}),
+			this.players === 1
+				? new Computer({
+						key: 'computer01',
+						name: 'Computer 1',
+						startX: this.board.playerStartData[1].x,
+						startY: this.board.playerStartData[1].y,
+						type: SpriteTypeEnum.Computer,
+						maxSpeed: 10 - (4 - this.difficulty) - Math.floor(Math.random() * 2),
+						startIteration: 11,
+						totalLaps: this.totalLaps,
+					})
+				: new Player({
+						key: 'player02',
+						name: 'Player 2',
+						startX: this.board.playerStartData[1].x,
+						startY: this.board.playerStartData[1].y,
+						type: SpriteTypeEnum.Player02,
+						maxSpeed: 10,
+						zIndex: 7000,
+						startIteration: 0,
+						totalLaps: this.totalLaps,
+					}),
 			new Computer({
 				key: 'computer02',
 				name: 'Computer 2',
@@ -200,5 +210,5 @@ export default class Game implements IGame {
 				totalLaps: this.totalLaps,
 			}),
 		];
-	}
+	};
 }

@@ -1,4 +1,4 @@
-import IBoard from './interfaces/board';
+import IBoard, { IBlockPosition } from './interfaces/board';
 import ISprite from './interfaces/sprite';
 import Sprite from './sprite';
 import IFileService from '../services/interfaces/file-service';
@@ -22,7 +22,7 @@ export default class Board implements IBoard {
 
 	constructor() {
 		this.fileService = new FileService();
-		this.board = [[]]
+		this.board = [[]];
 		this.boardWidth = this.SPRITE_BLOCKS_WIDTH;
 		this.boardHeight = this.SPRITE_BLOCKS_HEIGHT;
 		this.playerStartData = [];
@@ -34,8 +34,11 @@ export default class Board implements IBoard {
 	public readLevel = async (level: number): Promise<void> => {
 		this.board = await this.fileService.readLevel(level);
 
-		const playerStartData = await this.fileService.readPlayerData(level)
-		this.playerStartData = playerStartData.map((value: any) => ({ x: value[0], y: value[1]}));
+		const playerStartData = await this.fileService.readPlayerData(level);
+		this.playerStartData = playerStartData.map((value: number[]) => ({
+			x: value[0],
+			y: value[1],
+		}));
 
 		this.sprites = [
 			new Sprite({
@@ -45,7 +48,7 @@ export default class Board implements IBoard {
 				y: 1,
 				width: this.boardWidth,
 				height: this.boardHeight,
-				type: SpriteTypeEnum[`Level${ level.toString().length === 1 ? '0' : '' }${ level }Board`],
+				type: this.boardSpriteType(level),
 				zIndex: 100,
 			}),
 			new Sprite({
@@ -58,47 +61,59 @@ export default class Board implements IBoard {
 				type: SpriteTypeEnum.Oil,
 				zIndex: 4000,
 			}),
-		]
-	}
+		];
+	};
 
-	public isBlock = (x: number, y: number, block: BlockEnum): boolean => this.board[y-1][x-1] === block;
+	public isBlock = (x: number, y: number, block: BlockEnum): boolean =>
+		this.board[y - 1][x - 1] === block;
 
-	public findBlock = (block: number): any => {
+	public findBlock = (block: number): IBlockPosition => {
 		for (let y = 1; y < this.board.length; y++) {
 			const x = this.board[y].indexOf(block);
 			if (x > -1) {
-				return { xPos: x + 1, yPos: y + 1};
+				return { xPos: x + 1, yPos: y + 1 };
 			}
 		}
 
 		return { xPos: null, yPos: null };
-	}
+	};
 
 	public setOil = (): void => {
-		let blockIsRoad = false
+		let blockIsRoad = false;
 
 		do {
 			this.oilX = Math.floor(Math.random() * (this.board[0].length - 1)) + 1;
 			this.oilY = Math.floor(Math.random() * (this.board.length - 1)) + 1;
-			if (this.board[this.oilY-1][this.oilX-1] === BlockEnum.ROAD) blockIsRoad = true;
+			if (this.board[this.oilY - 1][this.oilX - 1] === BlockEnum.ROAD) blockIsRoad = true;
 		} while (!blockIsRoad);
 
-		this.board[this.oilY-1][this.oilX-1] = BlockEnum.OIL;
+		this.board[this.oilY - 1][this.oilX - 1] = BlockEnum.OIL;
 		const oil = this.sprites.find((sprite: ISprite) => sprite.key === 'oil');
 		if (!oil) return;
 
 		oil.x = this.oilX;
 		oil.y = this.oilY;
 		oil.visable = true;
-	}
+	};
 
 	public removeOil = (): void => {
 		const oil = this.sprites.find((sprite: ISprite) => sprite.key === 'oil');
 		if (!oil) return;
 
-		this.board[this.oilY-1][this.oilX-1] = BlockEnum.ROAD;
+		this.board[this.oilY - 1][this.oilX - 1] = BlockEnum.ROAD;
 		oil.x = 1;
 		oil.y = 1;
 		oil.visable = false;
-	}
+	};
+
+	/**
+	 * `Level07Board` for level 7, looked up by name rather than held in a table.
+	 *
+	 * The cast is what used to be bought by `suppressImplicitAnyIndexErrors`,
+	 * which TypeScript removed in 5.5: indexing an enum by a computed string is
+	 * exactly the thing that flag silenced everywhere, and naming the key type
+	 * here confines it to the one place that needs it.
+	 */
+	private boardSpriteType = (level: number): SpriteTypeEnum =>
+		SpriteTypeEnum[`Level${level.toString().padStart(2, '0')}Board` as keyof typeof SpriteTypeEnum];
 }

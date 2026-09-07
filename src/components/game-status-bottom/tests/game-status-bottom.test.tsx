@@ -1,5 +1,4 @@
-import React from 'react';
-import { shallow } from 'enzyme';
+import { render } from '@testing-library/react';
 
 import GameStatusBottom from '../game-status-bottom';
 import IGameStatusBottomProps from '../interfaces/game-status-bottom-props';
@@ -11,7 +10,7 @@ describe('Game Status Bottom', () => {
 			totalLaps: 100,
 		};
 
-		const gameStatus = shallow(<GameStatusBottom {...defaultProps} />);
-		expect(gameStatus).toMatchSnapshot();
+		const { asFragment } = render(<GameStatusBottom {...defaultProps} />);
+		expect(asFragment()).toMatchSnapshot();
 	});
 });

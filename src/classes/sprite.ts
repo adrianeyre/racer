@@ -27,11 +27,21 @@ export default class Sprite implements ISprite {
 	public type: SpriteTypeEnum;
 
 	readonly Z_INDEX: number = 5000;
-	readonly spriteImages = {
-		level01Board, level02Board, level03Board, level04Board, level05Board,
-		level06Board, level07Board, level08Board, level09Board, level10Board,
-		oil
-	}
+	// Partial, because a `SpriteTypeEnum` also names the cars, and a car's
+	// frames live in `Car`. A Sprite is only ever built for a board or the oil.
+	readonly spriteImages: Partial<Record<SpriteTypeEnum, string>> = {
+		level01Board,
+		level02Board,
+		level03Board,
+		level04Board,
+		level05Board,
+		level06Board,
+		level07Board,
+		level08Board,
+		level09Board,
+		level10Board,
+		oil,
+	};
 
 	constructor(config: ISpriteProps) {
 		this.key = config.key;
@@ -43,6 +53,6 @@ export default class Sprite implements ISprite {
 		this.height = config.height;
 		this.zIndex = config.zIndex || this.Z_INDEX;
 		this.type = config.type;
-		this.image = this.spriteImages[this.type];
+		this.image = this.spriteImages[this.type] ?? '';
 	}
 }

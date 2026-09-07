@@ -17,7 +17,7 @@ export default interface ICar {
 	startY: number;
 	width: number;
 	height: number;
-	zIndex: number
+	zIndex: number;
 	score: number;
 	direction: DirectionEnum;
 	image: string;
@@ -40,5 +40,5 @@ export default interface ICar {
 	turnLeft(): void;
 	directCar(board: IBoard): void;
 	alterDirection(): DirectionEnum;
-	finishSpin(): PlayerResultEnum
+	finishSpin(): PlayerResultEnum;
 }

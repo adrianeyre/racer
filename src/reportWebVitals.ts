@@ -1,15 +1,22 @@
-import { ReportHandler } from 'web-vitals';
+import type { Metric } from 'web-vitals';
 
-const reportWebVitals = (onPerfEntry?: ReportHandler) => {
-  if (onPerfEntry && onPerfEntry instanceof Function) {
-    import('web-vitals').then(({ getCLS, getFID, getFCP, getLCP, getTTFB }) => {
-      getCLS(onPerfEntry);
-      getFID(onPerfEntry);
-      getFCP(onPerfEntry);
-      getLCP(onPerfEntry);
-      getTTFB(onPerfEntry);
-    });
-  }
+type ReportHandler = (metric: Metric) => void;
+
+/**
+ * web-vitals 6 replaced the `getX` getters with `onX` listeners and dropped FID
+ * outright — Interaction to Next Paint superseded it as a Core Web Vital — so
+ * the set reported here is CLS, FCP, INP, LCP and TTFB.
+ */
+const reportWebVitals = (onPerfEntry?: ReportHandler): void => {
+	if (!onPerfEntry) return;
+
+	void import('web-vitals').then(({ onCLS, onFCP, onINP, onLCP, onTTFB }) => {
+		onCLS(onPerfEntry);
+		onFCP(onPerfEntry);
+		onINP(onPerfEntry);
+		onLCP(onPerfEntry);
+		onTTFB(onPerfEntry);
+	});
 };
 
 export default reportWebVitals;
